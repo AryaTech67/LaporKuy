@@ -95,7 +95,7 @@ Ya, terdapat sejumlah komponen arsitektural krusial, konfigurasi database, dan a
 Pengujian manual pada perangkat smartphone fisik (viewport 360px-414px) untuk memvalidasi fluiditas navigasi bottom dock, kenyamanan jangkauan jempol (thumb zone), dan pencegahan pergeseran tata letak (layout shifting) pada peramban bergerak.
 
 ---
-Bogor, 09 September 2026
+Bogor, 13 September 2026
 
 Menyetujui,  
 Ketua Tim
