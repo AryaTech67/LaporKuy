@@ -104,4 +104,4 @@ Ketua Tim
 
 
 (Bendzanu Kamagifi)  
-NISN / NIM: 0093389827
+NISN: 0093389827
