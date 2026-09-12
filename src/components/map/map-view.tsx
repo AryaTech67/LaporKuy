@@ -61,11 +61,8 @@ export function MapView({
             toast.error("Akses lokasi ditolak", {
               description: "Aplikasi ini mewajibkan akses lokasi. Silakan izinkan di pengaturan browser."
             });
-          } else {
-            toast.error("Gagal mendapatkan lokasi", {
-              description: "Pastikan GPS kamu aktif atau sinyal stabil. Menggunakan default lokasi."
-            });
           }
+          // Error code != 1 diabaikan tanpa toast agar tidak mengganggu jika refresh terus menerus
         },
         { enableHighAccuracy: true, timeout: 10000 }
       );

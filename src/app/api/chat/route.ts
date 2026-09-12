@@ -1,7 +1,21 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Menggunakan API Key dari .env.local atau fallback API Key aktif
-const apiKey = process.env.GEMINI_API_KEY || 'AIzaSyBKjW37QoGztY0Cs0ZDvR9oZ9XQqPyuTng';
+let defaultApiKey = process.env.GEMINI_API_KEY || 'AIzaSyBKjW37QoGztY0Cs0ZDvR9oZ9XQqPyuTng';
+
+if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'AIzaSyBKjW37QoGztY0Cs0ZDvR9oZ9XQqPyuTng') {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const envPath = path.join(process.cwd(), '.env.local');
+    if (fs.existsSync(envPath)) {
+      const envContent = fs.readFileSync(envPath, 'utf8');
+      const match = envContent.match(/GEMINI_API_KEY=(.+)/);
+      if (match && match[1]) defaultApiKey = match[1].replace(/['"]/g, '').trim();
+    }
+  } catch (e) {}
+}
+const apiKey = defaultApiKey;
 
 const systemPrompt = `Anda adalah LaporKuy AI, asisten customer service ramah untuk aplikasi "LaporKuy". 
 LaporKuy adalah platform bagi masyarakat untuk melaporkan masalah infrastruktur kota (seperti jalan rusak, lampu mati, penumpukan sampah, banjir).
@@ -17,7 +31,21 @@ Jika pengguna bertanya di luar topik infrastruktur/laporankuy, tolak dengan halu
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
-    const effectiveKey = process.env.GEMINI_API_KEY || apiKey;
+    let effectiveKey = process.env.GEMINI_API_KEY || apiKey;
+    
+    // Bypass Next.js env cache
+    if (!effectiveKey || effectiveKey === 'AIzaSyBKjW37QoGztY0Cs0ZDvR9oZ9XQqPyuTng') {
+      try {
+        const fs = require('fs');
+        const path = require('path');
+        const envPath = path.join(process.cwd(), '.env.local');
+        if (fs.existsSync(envPath)) {
+          const envContent = fs.readFileSync(envPath, 'utf8');
+          const match = envContent.match(/GEMINI_API_KEY=(.+)/);
+          if (match && match[1]) effectiveKey = match[1].replace(/['"]/g, '').trim();
+        }
+      } catch (e) {}
+    }
 
     // Jika API Key tidak ada (atau masih default mock), kembalikan pesan mock
     if (!effectiveKey || effectiveKey === 'AIzaSyBKjW37QoGztY0Cs0ZDvR9oZ9XQqPyuTng' || effectiveKey === 'MOCK_KEY_FOR_TESTING') {

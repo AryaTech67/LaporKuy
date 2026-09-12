@@ -24,6 +24,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
         !pathname.startsWith('/admin') &&
         pathname !== '/'
       ) {
+        import('sonner').then(({ toast }) => {
+          toast.error('Akses Terbatas', {
+            description: 'Silakan masuk atau daftar terlebih dahulu untuk mengakses fitur ini.'
+          });
+        });
         router.replace('/login');
       } else {
         setIsReady(true);

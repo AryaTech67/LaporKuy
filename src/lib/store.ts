@@ -222,6 +222,9 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
             if ((!profileData.name || profileData.name === 'Pengguna LaporKuy') && googleName) {
               profileData.name = googleName;
             }
+            if (!profileData.phone && meta.phone) {
+              profileData.phone = meta.phone;
+            }
           }
 
           // Check user-scoped profile override in localStorage

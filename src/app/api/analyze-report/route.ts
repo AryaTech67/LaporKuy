@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         if (fs.existsSync(envPath)) {
           const envContent = fs.readFileSync(envPath, 'utf8');
           const match = envContent.match(/GEMINI_API_KEY=(.+)/);
-          if (match && match[1]) apiKey = match[1].trim();
+          if (match && match[1]) apiKey = match[1].replace(/['"]/g, '').trim();
         }
       } catch (e) {}
     }
@@ -34,10 +34,10 @@ export async function POST(req: Request) {
         const mimeType = imageBase64.split(';')[0].split(':')[1] || 'image/jpeg';
         const data = imageBase64.split('base64,')[1];
 
-        const prompt = `Analisis foto pengaduan fasilitas publik ini secara akurat.
+        const prompt = `Analisis foto pengaduan fasilitas publik ini secara akurat dan KETAT.
 
 Tugas Anda:
-1. Validasi Spam/Prank: Apakah foto ini BENAR-BENAR menunjukkan infrastruktur/fasilitas publik (seperti jalan, lampu, sampah, saluran air, trotoar, bangunan)? Jika foto ini terdeteksi sebagai spam, bercanda, foto selfie wajah, meme, gambar blank, screenshot game, hewan, dsb yang BUKAN merupakan laporan kerusakan publik, tandai sebagai TIDAK VALID.
+1. Validasi Spam/Prank (SANGAT KETAT): Apakah foto ini BENAR-BENAR menunjukkan infrastruktur/fasilitas publik (seperti jalan, lampu, sampah, saluran air, trotoar, bangunan)? JIKA ADA wajah manusia, foto selfie, meme, gambar blank, screenshot, hewan, atau hal yang TIDAK RELEVAN dengan kerusakan fasilitas publik, ANDA WAJIB menandainya sebagai TIDAK VALID.
 2. Klasifikasi (Jika Valid): Klasifikasikan foto ke dalam SALAH SATU kategori ini:
 - "Jalan Rusak" (jalan berlubang, retak, aspal hancur)
 - "Lampu Mati" (PJU mati, tiang listrik/lampu padam)

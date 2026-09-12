@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Bell, CheckCheck, Gift, ThumbsUp, ShieldCheck, ChevronRight, Clock, Loader2 } from 'lucide-react';
+import { useLaporKuyStore } from '@/lib/store';
 
 function formatTimeAgo(dateString: string) {
   // If it's already a relative string from mock data (e.g., '10 menit lalu')
@@ -49,6 +50,7 @@ export default function NotifikasiPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'status' | 'community' | 'reward'>('all');
   const supabase = createClient();
+  const { markNotificationsRead: globalMarkRead } = useLaporKuyStore();
 
   useEffect(() => {
     async function fetchNotifications() {
@@ -73,6 +75,13 @@ export default function NotifikasiPage() {
   const markNotificationsRead = async () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
     await supabase.from('notifications').update({ is_read: true }).neq('id', '0'); // update all
+    globalMarkRead();
+  };
+
+  const markSingleRead = async (id: string) => {
+    setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, is_read: true } : n));
+    await supabase.from('notifications').update({ is_read: true }).eq('id', id);
+    globalMarkRead();
   };
 
   const filteredNotifs = notifications.filter((n) => {
@@ -213,7 +222,7 @@ export default function NotifikasiPage() {
 
             if (targetLink) {
               return (
-                <Link key={item.id} href={targetLink} className={cardClasses}>
+                <Link key={item.id} href={targetLink} className={cardClasses} onClick={() => !item.is_read && markSingleRead(item.id)}>
                   {innerContent}
                 </Link>
               );
