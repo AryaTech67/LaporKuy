@@ -27,9 +27,125 @@ const defaultProfile: UserProfile = {
   badges: [],
 };
 
-const freshQuestsTemplate: Quest[] = [];
+export const freshQuestsTemplate: Quest[] = [
+  {
+    id: 'q-1',
+    title: 'Pelapor Harian',
+    description: 'Laporkan minimal 1 kerusakan infrastruktur kota hari ini',
+    rewardPoints: 15,
+    progress: 0,
+    target: 1,
+    type: 'daily',
+    isClaimed: false,
+    expiresIn: 'Hari ini'
+  },
+  {
+    id: 'q-2',
+    title: 'Verifikator Komunitas',
+    description: 'Berikan dukungan (upvote) pada 3 laporan warga lain',
+    rewardPoints: 10,
+    progress: 0,
+    target: 3,
+    type: 'daily',
+    isClaimed: false,
+    expiresIn: 'Hari ini'
+  },
+  {
+    id: 'q-3',
+    title: 'Penjelajah Wilayah',
+    description: 'Laporkan masalah fasilitas di area target Kecamatan Gubeng',
+    rewardPoints: 50,
+    progress: 0,
+    target: 1,
+    type: 'weekly',
+    isClaimed: false,
+    expiresIn: '5 hari lagi'
+  },
+  {
+    id: 'q-4',
+    title: 'Aksi Peduli Lingkungan',
+    description: 'Laporkan titik tumpukan sampah liar atau saluran mampet ke DLH',
+    rewardPoints: 100,
+    progress: 0,
+    target: 1,
+    type: 'seasonal',
+    isClaimed: false,
+    expiresIn: '14 hari lagi'
+  }
+];
 
-const defaultRewardsTemplate: Reward[] = [];
+export const defaultRewardsTemplate: Reward[] = [
+  {
+    id: 'r-cert',
+    title: 'E-Sertifikat Kontributor Fasilitas Publik',
+    category: 'Apresiasi Digital',
+    pointsCost: 150,
+    stock: 50,
+    partnerName: 'Pemerintah Kota & LaporKuy',
+    description: 'Sertifikat penghargaan resmi ber-barcode yang diterbitkan atas kontribusi aktif Anda dalam pelaporan dan perbaikan infrastruktur publik.',
+    imageUrl: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'r-badge',
+    title: 'Bingkai Emas Profil & Titel Warga Peduli',
+    category: 'Titel & Badge',
+    pointsCost: 80,
+    stock: 100,
+    partnerName: 'Komunitas Warga LaporKuy',
+    description: 'Aktifkan avatar dengan frame emas berkilau eksklusif dan sematkan gelar kehormatan Warga Peduli pada setiap aktivitas dan laporan Anda.',
+    imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'r-tree',
+    title: 'Adopsi 1 Bibit Pohon Penghijauan Kota',
+    category: 'Dampak Sosial',
+    pointsCost: 200,
+    stock: 25,
+    partnerName: 'Dinas Lingkungan Hidup & Aksi Hijau',
+    description: 'Dedikasikan 1 bibit pohon produktif untuk ditanam di Ruang Terbuka Hijau (RTH) kota Surabaya atas nama Anda lengkap dengan nomor akta tanam.',
+    imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'r-fasttrack',
+    title: 'Voucher Jalur Prioritas Layanan Publik',
+    category: 'Layanan Publik',
+    pointsCost: 350,
+    stock: 15,
+    partnerName: 'Mall Pelayanan Publik & Pemda',
+    description: 'Tiket akses antrean jalur cepat (Fast Track Priority) untuk pengurusan administrasi sipil di Mall Pelayanan Publik (MPP) Surabaya.',
+    imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'r-rec',
+    title: 'Surat Pengakuan Kontribusi Warga Aktif',
+    category: 'Apresiasi Digital',
+    pointsCost: 120,
+    stock: 40,
+    partnerName: 'Pusat Aspirasi & Partisipasi Publik',
+    description: 'Surat keterangan resmi apresiasi dedikasi warga sipil yang dapat dilampirkan pada portofolio pengabdian masyarakat, beasiswa, atau berkas resmi.',
+    imageUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'r-merch',
+    title: 'Tumbler Eksklusif #LaporKuy',
+    category: 'Dampak Sosial',
+    pointsCost: 450,
+    stock: 10,
+    partnerName: 'LaporKuy Official Civic Store',
+    description: 'Tumbler stainless steel 500ml tahan panas & dingin dengan ukiran nama akun Anda dan logo resmi LaporKuy peduli lingkungan.',
+    imageUrl: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'r-wallet',
+    title: 'Saldo E-Wallet / Pulsa Rp 25.000',
+    category: 'Layanan Publik',
+    pointsCost: 280,
+    stock: 30,
+    partnerName: 'GoPay / OVO / Telkomsel',
+    description: 'Voucher saldo digital yang dapat dicairkan langsung ke nomor e-wallet atau nomor ponsel terdaftar pelapor.',
+    imageUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&auto=format&fit=crop&q=80'
+  }
+];
 
 export const defaultMockReports: Report[] = [];
 
@@ -86,7 +202,7 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
   const [reports, setReports] = useState<Report[]>([]);
 
   const [profile, setProfile] = useState<UserProfile>(defaultProfile);
-  const [quests, setQuests] = useState<Quest[]>([]);
+  const [quests, setQuests] = useState<Quest[]>(freshQuestsTemplate);
   const [rewards, setRewards] = useState<Reward[]>(defaultRewardsTemplate);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -117,10 +233,12 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
         // Fetch public data
         const [
           { data: reportsData },
-          { data: rewardsData }
+          { data: rewardsData },
+          { data: questsData }
         ] = await Promise.all([
           supabase.from('reports').select('*, comments(*)').order('created_at', { ascending: false }),
-          supabase.from('rewards').select('*')
+          supabase.from('rewards').select('*'),
+          supabase.from('quests').select('*').order('id', { ascending: true })
         ]);
 
         if (reportsData !== null && reportsData !== undefined) {
@@ -161,7 +279,23 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
             imageUrl: r.image_url,
             partnerName: r.partner_name
           })));
+        } else {
+          setRewards(defaultRewardsTemplate);
         }
+
+        const baseQuests: Quest[] = (questsData && questsData.length > 0)
+          ? questsData.map((q: any) => ({
+              id: q.id,
+              title: q.title,
+              description: q.description,
+              rewardPoints: q.reward_points,
+              progress: q.progress || 0,
+              target: q.target,
+              type: q.type,
+              isClaimed: q.is_claimed || false,
+              expiresIn: q.expires_in || 'Hari ini'
+            }))
+          : freshQuestsTemplate;
 
         // Fetch user-specific data if logged in
         if (userId) {
@@ -239,16 +373,16 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
           }
 
           // User-scoped quest progress loading
-          let userQuests = freshQuestsTemplate;
+          let userQuests = baseQuests;
           if (typeof window !== 'undefined') {
             const savedQuests = localStorage.getItem(`laporkuy_quests_${userId}`);
             if (savedQuests) {
               try {
                 const parsed = JSON.parse(savedQuests);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                  userQuests = freshQuestsTemplate.map(fq => {
-                    const match = parsed.find((p: any) => p.id === fq.id);
-                    return match ? { ...fq, ...match } : fq;
+                  userQuests = baseQuests.map(bq => {
+                    const match = parsed.find((p: any) => p.id === bq.id);
+                    return match ? { ...bq, ...match } : bq;
                   });
                 }
               } catch (e) {}
@@ -298,7 +432,23 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
         } else {
           // If not logged in, maintain local demo user state so existing local preview isn't reset
           setProfile(defaultProfile);
-          setQuests(freshQuestsTemplate);
+          let guestQuests = baseQuests;
+          if (typeof window !== 'undefined') {
+            const savedQuests = localStorage.getItem('laporkuy_quests_guest');
+            if (savedQuests) {
+              try {
+                const parsed = JSON.parse(savedQuests);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                  guestQuests = baseQuests.map(bq => {
+                    const match = parsed.find((p: any) => p.id === bq.id);
+                    return match ? { ...bq, ...match } : bq;
+                  });
+                }
+              } catch (e) {}
+            }
+          }
+          setQuests(guestQuests);
+          setRewards(defaultRewardsTemplate);
         }
       } catch (err) {
         console.error("Failed to load from Supabase, using fresh initial fallback", err);
@@ -438,9 +588,8 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
       });
 
       if (typeof window !== 'undefined') {
-        if (profile.id) {
-          localStorage.setItem(`laporkuy_quests_${profile.id}`, JSON.stringify(updated));
-        }
+        const questKey = profile.id ? `laporkuy_quests_${profile.id}` : 'laporkuy_quests_guest';
+        localStorage.setItem(questKey, JSON.stringify(updated));
         window.dispatchEvent(new Event('laporkuy_store_update'));
       }
       return updated;
@@ -502,9 +651,8 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
         });
 
         if (typeof window !== 'undefined') {
-          if (profile.id) {
-            localStorage.setItem(`laporkuy_quests_${profile.id}`, JSON.stringify(updated));
-          }
+          const questKey = profile.id ? `laporkuy_quests_${profile.id}` : 'laporkuy_quests_guest';
+          localStorage.setItem(questKey, JSON.stringify(updated));
           window.dispatchEvent(new Event('laporkuy_store_update'));
         }
         return updated;
@@ -764,8 +912,9 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
 
     sendTelegramLog(`<b>🎯 Misi Diklaim</b>\n\n<b>User:</b> ${profile.name || 'Anonim'}\n<b>Misi:</b> ${quest.title}\n<b>Reward Poin:</b> +${reward}\n<b>Waktu:</b> ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'long', timeStyle: 'medium' })}`);
     
-    if (typeof window !== 'undefined' && profile.id) {
-      localStorage.setItem(`laporkuy_quests_${profile.id}`, JSON.stringify(updatedQuests));
+    if (typeof window !== 'undefined') {
+      const questKey = profile.id ? `laporkuy_quests_${profile.id}` : 'laporkuy_quests_guest';
+      localStorage.setItem(questKey, JSON.stringify(updatedQuests));
     }
 
     const newPoints = (profile.points || 0) + reward;
@@ -938,7 +1087,8 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
     await supabase.auth.signOut();
     setIsLoggedIn(false);
     setProfile(defaultProfile);
-    setQuests([]);
+    setQuests(freshQuestsTemplate);
+    setRewards(defaultRewardsTemplate);
   };
 
   return {
