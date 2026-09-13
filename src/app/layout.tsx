@@ -66,6 +66,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className="min-h-full flex flex-col bg-background text-foreground dark:bg-slate-950 dark:text-slate-50 font-sans"
         suppressHydrationWarning
       >
+        {/* Suppress Netlify HUD & badge */}
+        <div id="nl-badge-frame" style={{ display: 'none', visibility: 'hidden', width: 0, height: 0 }} aria-hidden="true" />
+        <div id="nl-hud-frame" style={{ display: 'none', visibility: 'hidden', width: 0, height: 0 }} aria-hidden="true" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{localStorage.setItem('nl-hud:public:v1','hidden');localStorage.setItem('nl-hud:owner-private:v1','hidden');}catch(e){}`,
+          }}
+        />
         <Providers>
           {children}
         </Providers>
