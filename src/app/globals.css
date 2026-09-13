@@ -213,4 +213,17 @@
     background-color: var(--muted-foreground);
     border-radius: 3px;
   }
+
+  /* Hide Netlify Drawer & Preview Bar */
+  netlify-drawer,
+  #netlify-drawer,
+  .netlify-drawer,
+  [data-netlify-drawer],
+  iframe[src*="netlify"],
+  div[data-testid="netlify-drawer"] {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
 }
