@@ -63,7 +63,7 @@ export default function HomePage() {
             Ada fasilitas rusak<br/>di sekitar Anda?
           </h1>
           <p className="text-[1.05rem] sm:text-lg text-blue-100/90 leading-relaxed mt-5 max-w-sm font-medium">
-            Kirim foto, biar yang urus bagian yang nindaklanjuti. Laporan diverifikasi instan.
+            Kirim foto, biar pihak berwenang menindaklanjuti. Laporan diverifikasi instan.
           </p>
 
           <div className="flex flex-col sm:flex-row w-full justify-center gap-4 mt-10">

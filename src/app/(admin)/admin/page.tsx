@@ -182,7 +182,7 @@ export default function AdminPage() {
         report.assignedDinas || dinasOptions[0]
       );
       toast.success(`Laporan #${report.id} Berhasil Diverifikasi!`, {
-        description: 'Status kini Terverifikasi dan langsung tampil di web warga.'
+        description: 'Status kini Terverifikasi dan langsung tampil di portal publik.'
       });
       sendTelegramLog(`<b>🛡️ Laporan Diverifikasi (Admin)</b>\n\n<b>ID:</b> <code>${report.id}</code>\n<b>Admin:</b> AryaKuy\n<b>Status:</b> Terverifikasi\n<b>Waktu:</b> ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'long', timeStyle: 'medium' })}`);
     } catch {
@@ -757,7 +757,7 @@ export default function AdminPage() {
                                 size="sm"
                                 variant="outline"
                                 className="h-7 w-7 p-0 rounded-lg border-slate-200 dark:border-slate-700 text-slate-500 hover:text-slate-800 cursor-pointer"
-                                title="Lihat di Web Warga (Tab Baru)"
+                                title="Lihat di Portal Publik (Tab Baru)"
                               >
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </Button>
@@ -892,7 +892,7 @@ export default function AdminPage() {
               {/* Official Notes / Respon Dinas */}
               <div>
                 <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                  3. Catatan Resmi Dinas (Akan Tampil di Web Warga):
+                  3. Catatan Resmi Dinas (Akan Tampil di Portal Publik):
                 </label>
                 <textarea
                   rows={3}

@@ -126,13 +126,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               Peta Sebaran
             </Link>
             <Link
-              href="/dashboard"
+              href="/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:text-[#0057B8] hover:bg-blue-50 dark:hover:bg-slate-800 rounded-lg transition-colors border border-dashed border-slate-200 dark:border-slate-800"
-              title="Buka portal warga di tab baru"
+              title="Buka beranda utama website di tab baru"
             >
-              <span>Portal Warga</span>
+              <span>Lihat Website</span>
               <span className="text-[10px] opacity-70">↗</span>
             </Link>
           </nav>
@@ -193,11 +193,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             Peta Sebaran
           </Link>
           <Link
-            href="/dashboard"
+            href="/"
             target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-slate-500 hover:text-[#0057B8] whitespace-nowrap"
+            title="Buka beranda utama website di tab baru"
           >
-            <span>Web Warga ↗</span>
+            <span>Lihat Website ↗</span>
           </Link>
         </div>
       </header>
