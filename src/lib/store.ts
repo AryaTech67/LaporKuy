@@ -124,26 +124,6 @@ export const defaultRewardsTemplate: Reward[] = [
     partnerName: 'Pusat Aspirasi & Partisipasi Publik',
     description: 'Surat keterangan resmi apresiasi dedikasi warga sipil yang dapat dilampirkan pada portofolio pengabdian masyarakat, beasiswa, atau berkas resmi.',
     imageUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'r-merch',
-    title: 'Tumbler Eksklusif #LaporKuy',
-    category: 'Dampak Sosial',
-    pointsCost: 450,
-    stock: 10,
-    partnerName: 'LaporKuy Official Civic Store',
-    description: 'Tumbler stainless steel 500ml tahan panas & dingin dengan ukiran nama akun Anda dan logo resmi LaporKuy peduli lingkungan.',
-    imageUrl: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'r-wallet',
-    title: 'Saldo E-Wallet / Pulsa Rp 25.000',
-    category: 'Layanan Publik',
-    pointsCost: 280,
-    stock: 30,
-    partnerName: 'GoPay / OVO / Telkomsel',
-    description: 'Voucher saldo digital yang dapat dicairkan langsung ke nomor e-wallet atau nomor ponsel terdaftar pelapor.',
-    imageUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&auto=format&fit=crop&q=80'
   }
 ];
 

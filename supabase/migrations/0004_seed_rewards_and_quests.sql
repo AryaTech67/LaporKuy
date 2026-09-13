@@ -1,15 +1,16 @@
--- Migration: Seed official rewards and quests for LaporKuy v2.0
--- Description: Inserts standard catalog rewards and gamification quests
+-- Migration: Seed official digital civic rewards and quests for LaporKuy v2.0
+-- Description: Inserts standard in-app digital rewards (zero cash out-of-pocket) and gamification quests
 
--- 1. Insert Rewards Catalog
+-- Clean up any old cash / merchandise rewards
+DELETE FROM public.rewards WHERE id IN ('r-wallet', 'r-merch', 'r-1', 'r-2', 'r-3', 'r-4');
+
+-- 1. Insert In-App Civic Digital Rewards
 INSERT INTO public.rewards (id, title, category, points_cost, stock, partner_name, description, image_url) VALUES
-('r-cert', 'E-Sertifikat Kontributor Fasilitas Publik', 'Apresiasi Digital', 150, 50, 'Pemerintah Kota & LaporKuy', 'Sertifikat penghargaan resmi ber-barcode yang diterbitkan atas kontribusi aktif Anda dalam pelaporan dan perbaikan infrastruktur publik.', 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&auto=format&fit=crop&q=80'),
 ('r-badge', 'Bingkai Emas Profil & Titel Warga Peduli', 'Titel & Badge', 80, 100, 'Komunitas Warga LaporKuy', 'Aktifkan avatar dengan frame emas berkilau eksklusif dan sematkan gelar kehormatan Warga Peduli pada setiap aktivitas dan laporan Anda.', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80'),
-('r-tree', 'Adopsi 1 Bibit Pohon Penghijauan Kota', 'Dampak Sosial', 200, 25, 'Dinas Lingkungan Hidup & Aksi Hijau', 'Dedikasikan 1 bibit pohon produktif untuk ditanam di Ruang Terbuka Hijau (RTH) kota Surabaya atas nama Anda lengkap dengan nomor akta tanam.', 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80'),
-('r-fasttrack', 'Voucher Jalur Prioritas Layanan Publik', 'Layanan Publik', 350, 15, 'Mall Pelayanan Publik & Pemda', 'Tiket akses antrean jalur cepat (Fast Track Priority) untuk pengurusan administrasi sipil di Mall Pelayanan Publik (MPP) Surabaya.', 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80'),
 ('r-rec', 'Surat Pengakuan Kontribusi Warga Aktif', 'Apresiasi Digital', 120, 40, 'Pusat Aspirasi & Partisipasi Publik', 'Surat keterangan resmi apresiasi dedikasi warga sipil yang dapat dilampirkan pada portofolio pengabdian masyarakat, beasiswa, atau berkas resmi.', 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&auto=format&fit=crop&q=80'),
-('r-merch', 'Tumbler Eksklusif #LaporKuy', 'Dampak Sosial', 450, 10, 'LaporKuy Official Civic Store', 'Tumbler stainless steel 500ml tahan panas & dingin dengan ukiran nama akun Anda dan logo resmi LaporKuy peduli lingkungan.', 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600&auto=format&fit=crop&q=80'),
-('r-wallet', 'Saldo E-Wallet / Pulsa Rp 25.000', 'Layanan Publik', 280, 30, 'GoPay / OVO / Telkomsel', 'Voucher saldo digital yang dapat dicairkan langsung ke nomor e-wallet atau nomor ponsel terdaftar pelapor.', 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&auto=format&fit=crop&q=80')
+('r-cert', 'E-Sertifikat Kontributor Fasilitas Publik', 'Apresiasi Digital', 150, 50, 'Pemerintah Kota & LaporKuy', 'Sertifikat penghargaan resmi ber-barcode yang diterbitkan atas kontribusi aktif Anda dalam pelaporan dan perbaikan infrastruktur publik.', 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&auto=format&fit=crop&q=80'),
+('r-tree', 'Adopsi 1 Bibit Pohon Penghijauan Kota', 'Dampak Sosial', 200, 25, 'Dinas Lingkungan Hidup & Aksi Hijau', 'Dedikasikan 1 bibit pohon produktif untuk ditanam di Ruang Terbuka Hijau (RTH) kota Surabaya atas nama Anda lengkap dengan nomor akta tanam.', 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80'),
+('r-fasttrack', 'Voucher Jalur Prioritas Layanan Publik', 'Layanan Publik', 350, 15, 'Mall Pelayanan Publik & Pemda', 'Tiket akses antrean jalur cepat (Fast Track Priority) untuk pengurusan administrasi sipil di Mall Pelayanan Publik (MPP) Surabaya.', 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80')
 ON CONFLICT (id) DO UPDATE SET
   title = EXCLUDED.title,
   category = EXCLUDED.category,
