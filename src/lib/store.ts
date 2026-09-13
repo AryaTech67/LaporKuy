@@ -76,16 +76,6 @@ export const freshQuestsTemplate: Quest[] = [
 
 export const defaultRewardsTemplate: Reward[] = [
   {
-    id: 'r-cert',
-    title: 'E-Sertifikat Kontributor Fasilitas Publik',
-    category: 'Apresiasi Digital',
-    pointsCost: 150,
-    stock: 50,
-    partnerName: 'Pemerintah Kota & LaporKuy',
-    description: 'Sertifikat penghargaan resmi ber-barcode yang diterbitkan atas kontribusi aktif Anda dalam pelaporan dan perbaikan infrastruktur publik.',
-    imageUrl: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&auto=format&fit=crop&q=80'
-  },
-  {
     id: 'r-badge',
     title: 'Bingkai Emas Profil & Titel Warga Peduli',
     category: 'Titel & Badge',
@@ -93,27 +83,7 @@ export const defaultRewardsTemplate: Reward[] = [
     stock: 100,
     partnerName: 'Komunitas Warga LaporKuy',
     description: 'Aktifkan avatar dengan frame emas berkilau eksklusif dan sematkan gelar kehormatan Warga Peduli pada setiap aktivitas dan laporan Anda.',
-    imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'r-tree',
-    title: 'Adopsi 1 Bibit Pohon Penghijauan Kota',
-    category: 'Dampak Sosial',
-    pointsCost: 200,
-    stock: 25,
-    partnerName: 'Dinas Lingkungan Hidup & Aksi Hijau',
-    description: 'Dedikasikan 1 bibit pohon produktif untuk ditanam di Ruang Terbuka Hijau (RTH) kota Surabaya atas nama Anda lengkap dengan nomor akta tanam.',
-    imageUrl: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'r-fasttrack',
-    title: 'Voucher Jalur Prioritas Layanan Publik',
-    category: 'Layanan Publik',
-    pointsCost: 350,
-    stock: 15,
-    partnerName: 'Mall Pelayanan Publik & Pemda',
-    description: 'Tiket akses antrean jalur cepat (Fast Track Priority) untuk pengurusan administrasi sipil di Mall Pelayanan Publik (MPP) Surabaya.',
-    imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80'
+    imageUrl: '/images/rewards/badge.jpg'
   },
   {
     id: 'r-rec',
@@ -123,7 +93,37 @@ export const defaultRewardsTemplate: Reward[] = [
     stock: 40,
     partnerName: 'Pusat Aspirasi & Partisipasi Publik',
     description: 'Surat keterangan resmi apresiasi dedikasi warga sipil yang dapat dilampirkan pada portofolio pengabdian masyarakat, beasiswa, atau berkas resmi.',
-    imageUrl: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?w=600&auto=format&fit=crop&q=80'
+    imageUrl: '/images/rewards/recommendation.jpg'
+  },
+  {
+    id: 'r-cert',
+    title: 'E-Sertifikat Kontributor Fasilitas Publik',
+    category: 'Apresiasi Digital',
+    pointsCost: 150,
+    stock: 50,
+    partnerName: 'Pemerintah Kota & LaporKuy',
+    description: 'Sertifikat penghargaan resmi ber-barcode yang diterbitkan atas kontribusi aktif Anda dalam pelaporan dan perbaikan infrastruktur publik.',
+    imageUrl: '/images/rewards/certificate.jpg'
+  },
+  {
+    id: 'r-tree',
+    title: 'Adopsi 1 Bibit Pohon Penghijauan Kota',
+    category: 'Dampak Sosial',
+    pointsCost: 200,
+    stock: 25,
+    partnerName: 'Dinas Lingkungan Hidup & Aksi Hijau',
+    description: 'Dedikasikan 1 bibit pohon produktif untuk ditanam di Ruang Terbuka Hijau (RTH) kota Surabaya atas nama Anda lengkap dengan nomor akta tanam.',
+    imageUrl: '/images/rewards/tree.jpg'
+  },
+  {
+    id: 'r-fasttrack',
+    title: 'Voucher Jalur Prioritas Layanan Publik',
+    category: 'Layanan Publik',
+    pointsCost: 350,
+    stock: 15,
+    partnerName: 'Mall Pelayanan Publik & Pemda',
+    description: 'Tiket akses antrean jalur cepat (Fast Track Priority) untuk pengurusan administrasi sipil di Mall Pelayanan Publik (MPP) Surabaya.',
+    imageUrl: '/images/rewards/fasttrack.jpg'
   }
 ];
 
