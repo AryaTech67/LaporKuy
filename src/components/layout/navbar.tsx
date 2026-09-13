@@ -57,6 +57,15 @@ export function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasAuth = localStorage.getItem('laporkuy_admin_auth') || document.cookie.includes('laporkuy_admin_session=authenticated');
+      setIsAdmin(!!hasAuth);
+    }
+  }, []);
+
   // Prevent scroll when mobile menu is open
   useEffect(() => {
     if (mobileOpen) {
@@ -124,6 +133,18 @@ export function Navbar() {
 
           {/* Desktop Right Actions */}
           <div className="hidden lg:flex items-center gap-3">
+            {/* Quick Panel Admin Shortcut for authenticated admin */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white text-xs font-bold border border-slate-700 shadow-xs transition-all hover:scale-105"
+                title="Buka Dashboard Admin"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                <span>Panel Admin</span>
+              </Link>
+            )}
+
             {isLoggedIn ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -179,6 +200,17 @@ export function Navbar() {
                     </Link>
 
 
+
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-[#0057B8] dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+                      >
+                        <ShieldCheck className="h-4 w-4 text-[#0057B8] dark:text-blue-400" />
+                        <span>Panel Admin</span>
+                      </Link>
+                    )}
 
                     <div className="h-px bg-slate-100 dark:bg-slate-800 my-1" />
 
@@ -259,6 +291,21 @@ export function Navbar() {
 
               {isLoggedIn ? (
                 <div className="space-y-2 pt-1">
+                  {/* Panel Admin Shortcut (Khusus Admin) */}
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-between px-3.5 py-3 text-sm font-bold text-white bg-slate-900 dark:bg-slate-800 rounded-xl hover:bg-slate-800 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <ShieldCheck className="h-4 w-4 text-amber-400" />
+                        <span>Panel Admin</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-400" />
+                    </Link>
+                  )}
+
                   {/* Profil Saya */}
                   <Link
                     href="/profil"

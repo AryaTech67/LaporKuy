@@ -23,8 +23,7 @@ import {
   Globe, 
   Building2, 
   LightbulbOff, 
-  Trash2,
-  ArrowLeft
+  Trash2 
 } from 'lucide-react';
 
 const MapView = dynamic(() => import('@/components/map/map-view').then(mod => mod.MapView), { 
@@ -57,15 +56,6 @@ function DashboardContent() {
   const startHeight = useRef(40);
 
   const sheetRef = useRef<HTMLDivElement>(null);
-
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hasAuth = localStorage.getItem('laporkuy_admin_auth') || document.cookie.includes('laporkuy_admin_session=authenticated');
-      setIsAdmin(!!hasAuth);
-    }
-  }, []);
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
@@ -164,18 +154,6 @@ function DashboardContent() {
       
       {/* MAP VIEW */}
       <div className="absolute inset-0 md:relative md:inset-auto md:flex-1 md:h-auto z-0 pointer-events-auto">
-        {/* Floating Back to Admin button if admin session is active */}
-        {isAdmin && (
-          <div className="absolute top-4 left-4 z-40 hidden md:block">
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-900 text-white text-xs font-bold shadow-lg border border-slate-700 backdrop-blur-md transition-all hover:scale-105"
-            >
-              <ArrowLeft className="w-3.5 h-3.5 text-blue-400" />
-              <span>Kembali ke Admin</span>
-            </Link>
-          </div>
-        )}
         <MapView
           reports={sortedReports}
           mapMode="marker"
