@@ -1,17 +1,15 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Report } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { MapPin, ThumbsUp, Eye, Compass } from 'lucide-react';
+import { MapPin, ThumbsUp, Eye, Compass, Layers } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { toast } from 'sonner';
 
 // Leaflet imports
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -23,16 +21,80 @@ interface MapViewProps {
   className?: string;
 }
 
-const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY || 'qNmsb52QZkhFrzAr5QnL';
+// Ultra-fast CDN tile servers with zero API key requirement & global edge caching
+const TILE_PRESETS = {
+  voyager: {
+    id: 'voyager',
+    label: 'Peta Jalan',
+    icon: '🗺️',
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    subdomains: ['a', 'b', 'c', 'd'],
+    attribution: '&copy; CartoDB &copy; OpenStreetMap',
+    maxZoom: 20,
+  },
+  dark: {
+    id: 'dark',
+    label: 'Mode Gelap',
+    icon: '🌙',
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    subdomains: ['a', 'b', 'c', 'd'],
+    attribution: '&copy; CartoDB &copy; OpenStreetMap',
+    maxZoom: 20,
+  },
+  satellite: {
+    id: 'satellite',
+    label: 'Satelit',
+    icon: '🛰️',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    subdomains: ['server'],
+    attribution: '&copy; Esri World Imagery',
+    maxZoom: 19,
+  },
+} as const;
 
-// Component to handle map interactions
-function MapController({ selectedPin }: { selectedPin: Report | null }) {
+type TilePresetKey = keyof typeof TILE_PRESETS;
+
+// Component to handle map sizing, auto fit bounds, and smooth pan
+function MapController({ selectedPin, reports }: { selectedPin: Report | null; reports: Report[] }) {
   const map = useMap();
+  const hasFitted = useRef(false);
+
+  // Invalidate size immediately so Leaflet recalculates dimensions without blank tiles
   useEffect(() => {
-    if (selectedPin && selectedPin.lat && selectedPin.lng) {
-      map.flyTo([selectedPin.lat, selectedPin.lng], 15, { duration: 1.5 });
+    map.invalidateSize();
+    const t1 = setTimeout(() => map.invalidateSize(), 80);
+    const t2 = setTimeout(() => map.invalidateSize(), 300);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [map]);
+
+  // Automatically fit map bounds to display all reports in view
+  useEffect(() => {
+    if (reports && reports.length > 0 && !hasFitted.current) {
+      const validPoints = reports
+        .filter((r) => typeof r.lat === 'number' && typeof r.lng === 'number' && !isNaN(r.lat) && !isNaN(r.lng))
+        .map((r) => [r.lat, r.lng] as [number, number]);
+
+      if (validPoints.length === 1) {
+        map.setView(validPoints[0], 14, { animate: false });
+        hasFitted.current = true;
+      } else if (validPoints.length > 1) {
+        const bounds = L.latLngBounds(validPoints);
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+        hasFitted.current = true;
+      }
+    }
+  }, [reports, map]);
+
+  // Pan smoothly to selected pin on click
+  useEffect(() => {
+    if (selectedPin && typeof selectedPin.lat === 'number' && typeof selectedPin.lng === 'number') {
+      map.flyTo([selectedPin.lat, selectedPin.lng], 15, { duration: 0.8 });
     }
   }, [selectedPin, map]);
+
   return null;
 }
 
@@ -44,134 +106,117 @@ export function MapView({
   className = '',
 }: MapViewProps) {
   const [selectedPin, setSelectedPin] = useState<Report | null>(reports[0] || null);
-  const [mapTheme, setMapTheme] = useState<'dataviz-dark' | 'streets-v2' | 'satellite'>('streets-v2');
+  const [mapTheme, setMapTheme] = useState<TilePresetKey>('voyager');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [locationDenied, setLocationDenied] = useState(false);
 
+  // Keep selectedPin updated if reports change
   useEffect(() => {
-    if (navigator.geolocation) {
+    if (reports.length > 0 && (!selectedPin || !reports.some(r => r.id === selectedPin.id))) {
+      setSelectedPin(reports[0]);
+    }
+  }, [reports, selectedPin]);
+
+  // Fast, non-blocking user geolocation
+  useEffect(() => {
+    if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           setUserLocation([pos.coords.latitude, pos.coords.longitude]);
         },
-        (err) => {
-          console.warn('Geoloc warning:', err.message || 'Permission denied or unavailable');
-          if (err.code === 1) {
-            setLocationDenied(true);
-            toast.error("Akses lokasi ditolak", {
-              description: "Aplikasi ini mewajibkan akses lokasi. Silakan izinkan di pengaturan browser."
-            });
-          }
-          // Error code != 1 diabaikan tanpa toast agar tidak mengganggu jika refresh terus menerus
+        () => {
+          // Graceful silent fallback to reports center
         },
-        { enableHighAccuracy: true, timeout: 10000 }
+        { enableHighAccuracy: false, timeout: 3000, maximumAge: 120000 }
       );
     }
   }, []);
 
-  const getTileUrl = () => {
-    return `https://api.maptiler.com/maps/${mapTheme}/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`;
-  };
-
   const getCategoryColorHex = (category: string) => {
     switch (category) {
-      case 'Jalan Rusak': return '#f43f5e'; // rose-500
-      case 'Lampu Mati': return '#f59e0b'; // amber-500
-      case 'Sampah': return '#10b981'; // emerald-500
-      case 'Banjir': return '#3b82f6'; // blue-500
-      case 'Trotoar Rusak': return '#a855f7'; // purple-500
-      default: return '#334155'; // slate-700
+      case 'Jalan Rusak': return '#e11d48'; // rose-600
+      case 'Lampu Mati': return '#d97706'; // amber-600
+      case 'Sampah': return '#059669'; // emerald-600
+      case 'Banjir': return '#2563eb'; // blue-600
+      case 'Trotoar Rusak': return '#9333ea'; // purple-600
+      default: return '#0284c7'; // sky-600
     }
   };
 
   const createCustomIcon = (report: Report, isSelected: boolean) => {
     const color = getCategoryColorHex(report.category);
-    const ring = isSelected ? 'box-shadow: 0 0 0 4px white;' : '';
-    const zIndex = isSelected ? 1000 : 1;
-    
+    const ring = isSelected ? 'box-shadow: 0 0 0 3px #ffffff, 0 4px 12px rgba(0,0,0,0.4); transform: scale(1.1);' : 'box-shadow: 0 2px 6px rgba(0,0,0,0.25);';
+
     const htmlString = `
-      <div style="background-color: ${color}; color: white; padding: 4px 8px; border-radius: 999px; font-weight: bold; font-size: 11px; white-space: nowrap; display: flex; align-items: center; gap: 4px; border: 1px solid rgba(255,255,255,0.2); transition: all 0.2s; ${ring}">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-        ${report.category}
+      <div style="
+        background-color: ${color};
+        color: white;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 11px;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        border: 1.5px solid rgba(255,255,255,0.9);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        ${ring}
+      ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>${report.category}</span>
       </div>
     `;
 
     return L.divIcon({
       html: htmlString,
       className: 'custom-leaflet-marker',
-      iconSize: [100, 24],
-      iconAnchor: [50, 24],
-      popupAnchor: [0, -24],
+      iconSize: [110, 26],
+      iconAnchor: [55, 26],
+      popupAnchor: [0, -26],
     });
   };
 
-  // Dynamic Center based on actual user location or available reports from Supabase
+  // Center based on first available report or user location
   const defaultLat = reports[0]?.lat || -6.5246;
   const defaultLng = reports[0]?.lng || 106.8432;
-  const centerPosition: [number, number] = userLocation || [defaultLat, defaultLng];
+  const centerPosition: [number, number] = useMemo(() => {
+    return userLocation || [defaultLat, defaultLng];
+  }, [userLocation, defaultLat, defaultLng]);
 
-  if (locationDenied) {
-    return (
-      <div className={`relative w-full h-full min-h-[350px] overflow-hidden border-border bg-slate-950 flex flex-col items-center justify-center p-6 text-center ${className}`}>
-        <div className="bg-slate-900 border border-red-500/30 p-6 rounded-2xl max-w-md shadow-2xl z-10 animate-in zoom-in-95 duration-300">
-          <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <MapPin className="w-8 h-8 text-red-500" />
-          </div>
-          <h3 className="text-xl font-bold text-white mb-2">Izin Lokasi Diperlukan</h3>
-          <p className="text-sm text-slate-400 mb-6">
-            Aplikasi LaporKuy memerlukan izin lokasi presisi perangkat Anda untuk memetakan laporan masalah infrastruktur publik secara akurat.
-          </p>
-          <div className="bg-slate-950 p-4 rounded-lg text-left mb-6 border border-slate-800 text-xs text-slate-300">
-            <strong>Petunjuk Mengaktifkan Izin Lokasi:</strong>
-            <ol className="list-decimal pl-4 mt-2 space-y-1">
-              <li>Klik ikon gembok (🔒) atau informasi situs di sebelah kiri bilah URL browser Anda.</li>
-              <li>Pilih menu &quot;Location&quot; atau &quot;Lokasi&quot;.</li>
-              <li>Ubah pengaturannya menjadi &quot;Allow&quot; atau &quot;Izinkan&quot;.</li>
-              <li>Muat ulang (Refresh) halaman ini untuk melanjutkan.</li>
-            </ol>
-          </div>
-          <Button 
-            className="w-full bg-[#0057B8] hover:bg-[#004494] text-white font-bold"
-            onClick={() => window.location.reload()}
-          >
-            Izin Telah Diaktifkan, Muat Ulang Halaman
-          </Button>
-        </div>
-        {/* Blurred background effect */}
-        <div className="absolute inset-0 opacity-20 bg-[url('https://api.maptiler.com/maps/dataviz-dark/13/6575/4232.png?key=qNmsb52QZkhFrzAr5QnL')] bg-cover bg-center filter blur-sm"></div>
-      </div>
-    );
-  }
-
-
+  const activeTile = TILE_PRESETS[mapTheme];
 
   return (
-    <div className={`relative w-full h-full min-h-[350px] overflow-hidden border-border bg-slate-950 text-slate-100 ${className}`}>
+    <div className={`relative w-full h-full min-h-[350px] overflow-hidden bg-[#e8ecf1] dark:bg-slate-950 text-slate-900 dark:text-slate-100 ${className}`}>
       
+      {/* ════ MAP VIEWPORT ════ */}
       <div className="absolute inset-0 z-0">
         <MapContainer 
           center={centerPosition} 
           zoom={13} 
           scrollWheelZoom={true}
-          style={{ width: '100%', height: '100%', background: '#020617' }}
+          style={{ width: '100%', height: '100%', background: '#e8ecf1' }}
           zoomControl={false}
           attributionControl={false}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.maptiler.com/">MapTiler</a> &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url={getTileUrl()}
+            key={mapTheme}
+            attribution={activeTile.attribution}
+            url={activeTile.url}
+            subdomains={activeTile.subdomains as unknown as string[]}
+            maxZoom={activeTile.maxZoom}
+            crossOrigin="anonymous"
           />
           
-          <MapController selectedPin={selectedPin} />
+          <MapController selectedPin={selectedPin} reports={reports} />
 
           {reports.map((report, idx) => {
-            // Generate deterministic pseudo-random coordinates near default center if missing
-            const pseudoRandomX = (idx * 0.13) % 0.05;
-            const pseudoRandomY = (idx * 0.17) % 0.05;
-            const lat = report.lat || defaultLat + pseudoRandomX - 0.025;
-            const lng = report.lng || defaultLng + pseudoRandomY - 0.025;
+            // Deterministic coordinates fallback if coordinate is missing
+            const pseudoRandomX = (idx * 0.035) % 0.04;
+            const pseudoRandomY = (idx * 0.045) % 0.04;
+            const lat = report.lat || defaultLat + pseudoRandomX - 0.02;
+            const lng = report.lng || defaultLng + pseudoRandomY - 0.02;
             
-            // Just update the object so it stays consistent on click
             if (!report.lat || !report.lng) {
               report.lat = lat;
               report.lng = lng;
@@ -190,74 +235,93 @@ export function MapView({
                     onSelectReport?.(report);
                   },
                 }}
-              >
-              </Marker>
+              />
             );
           })}
         </MapContainer>
       </div>
 
-      {/* ════ STATIC UI LAYER ════ */}
+      {/* ════ FLOATING UI CONTROLS ════ */}
       <div className="relative z-10 p-4 pointer-events-none flex flex-col justify-between h-full">
         
-        {/* Top Map Control Bar */}
-        <div className="pointer-events-auto hidden md:flex flex-wrap items-center justify-between gap-2 bg-slate-900/90 backdrop-blur-md p-3 rounded-xl border border-slate-800 shadow-lg">
+        {/* Top Header & Layer Switcher Bar */}
+        <div className="pointer-events-auto hidden md:flex flex-wrap items-center justify-between gap-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-md">
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="bg-slate-800 text-slate-300 border-slate-700 flex items-center gap-1">
-              <Compass className="w-3.5 h-3.5 text-cyan-400" />
+            <Badge variant="outline" className="bg-blue-50 dark:bg-slate-800 text-[#0057B8] dark:text-cyan-400 border-blue-200 dark:border-slate-700 flex items-center gap-1.5 font-bold text-xs">
+              <Compass className="w-3.5 h-3.5 text-[#0057B8] dark:text-cyan-400" />
               Peta Sebaran Laporan Warga
             </Badge>
-            <span className="text-xs text-slate-400 font-medium">
-              {reports.length} Laporan Terdaftar
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
+              {reports.length} Laporan Aktif
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] font-semibold text-[#0084FF]">
-              🗺️ Mode Peta Jalan
-            </div>
+          {/* Quick Map Tile Switcher */}
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-lg border border-slate-200 dark:border-slate-800">
+            {(Object.keys(TILE_PRESETS) as TilePresetKey[]).map((key) => {
+              const item = TILE_PRESETS[key];
+              const isActive = mapTheme === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setMapTheme(key)}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all flex items-center gap-1 ${
+                    isActive
+                      ? 'bg-white dark:bg-slate-800 text-[#0057B8] dark:text-white shadow-xs'
+                      : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+                  }`}
+                  title={`Ganti ke mode ${item.label}`}
+                >
+                  <span>{item.icon}</span>
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Selected Pin Popup Card */}
-        <div className="pointer-events-auto mt-24 md:mt-0 max-w-[90vw] md:max-w-none mx-auto md:mx-0">
+        <div className="pointer-events-auto mt-24 md:mt-0 max-w-[95vw] md:max-w-xl mx-auto md:mx-0">
           {selectedPin && (
-            <Card className="relative z-10 bg-slate-900/95 text-slate-100 border-slate-800 p-4 rounded-xl shadow-2xl backdrop-blur-xl animate-in slide-in-from-bottom-3 duration-200">
+            <Card className="relative z-10 bg-white/95 dark:bg-slate-900/95 text-slate-900 dark:text-slate-100 border-slate-200 dark:border-slate-800 p-3.5 rounded-xl shadow-xl backdrop-blur-xl animate-in slide-in-from-bottom-2 duration-200">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={selectedPin.photoUrl}
+                <div className="flex items-center gap-3 min-w-0">
+                  <img
+                    src={selectedPin.photoUrl || '/images/reports/amblas.jpg'}
                     alt={selectedPin.title}
-                    width={56}
-                    height={56}
-                    loading="lazy"
-                    className="h-14 w-14 rounded-lg object-cover border border-slate-700 shrink-0"
+                    loading="eager"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/images/reports/amblas.jpg';
+                    }}
+                    className="h-14 w-14 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100"
                   />
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="bg-slate-800 text-slate-300 border-slate-700 text-[10px]">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge variant="outline" className="bg-blue-50 dark:bg-slate-800 text-[#0057B8] dark:text-blue-300 border-blue-200 dark:border-slate-700 text-[10px] font-bold">
                         {selectedPin.category}
                       </Badge>
-                      <Badge className="bg-rose-500/20 text-rose-300 border-rose-500/30 text-[10px]">
+                      <Badge className="bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-[10px] font-semibold">
                         Keparahan: {selectedPin.severity}/10
                       </Badge>
                     </div>
-                    <h4 className="text-sm font-bold text-slate-100 line-clamp-1 mt-0.5">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 line-clamp-1">
                       {selectedPin.title}
                     </h4>
-                    <p className="text-xs text-slate-400 line-clamp-1">
-                      📍 {selectedPin.address}
+                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 flex items-center gap-1 mt-0.5">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span>{selectedPin.address}</span>
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                  <div className="text-xs text-slate-400 flex items-center gap-1 mr-2">
-                    <ThumbsUp className="h-3.5 w-3.5 text-blue-400" />
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800">
+                  <div className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-1 font-semibold">
+                    <ThumbsUp className="h-3.5 w-3.5 text-[#0057B8]" />
                     <span>{selectedPin.upvotes} Dukungan</span>
                   </div>
                   <Link href={`/laporan/${selectedPin.id}`}>
-                    <Button size="sm" className="h-8 text-xs gap-1 bg-primary hover:bg-primary/90">
+                    <Button size="sm" className="h-8 text-xs gap-1.5 bg-[#0057B8] hover:bg-[#004494] text-white font-bold rounded-lg shadow-sm">
                       <Eye className="h-3.5 w-3.5" />
                       Detail
                     </Button>
@@ -269,10 +333,10 @@ export function MapView({
         </div>
       </div>
       
-      {/* Required CSS to ensure Leaflet renders properly inside container */}
+      {/* Required CSS to ensure Leaflet renders crisp & cleanly */}
       <style dangerouslySetInnerHTML={{__html: `
         .leaflet-container {
-          background: transparent !important;
+          background: #e8ecf1 !important;
           isolation: isolate;
           z-index: 0 !important;
         }

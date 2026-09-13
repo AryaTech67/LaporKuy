@@ -18,7 +18,10 @@ interface SingleLocationMapProps {
 function MapRecenter({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap();
   useEffect(() => {
+    map.invalidateSize();
+    const t = setTimeout(() => map.invalidateSize(), 100);
     map.setView([lat, lng], map.getZoom());
+    return () => clearTimeout(t);
   }, [lat, lng, map]);
   return null;
 }

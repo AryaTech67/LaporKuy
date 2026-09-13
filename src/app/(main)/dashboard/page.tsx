@@ -6,26 +6,37 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useLaporKuyStore } from '@/lib/store';
 import dynamic from 'next/dynamic';
-const MapView = dynamic(() => import('@/components/map/map-view').then(mod => mod.MapView), { ssr: false });
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Search,
-  Filter,
-  MapPin,
-  Clock,
-  ShieldAlert,
-  Target,
-  ThumbsUp,
-  Loader2,
-  MessageSquare,
-  Globe,
-  Building2,
-  LightbulbOff,
-  Trash2,
+import { 
+  Loader2, 
+  Search, 
+  Filter, 
+  MapPin, 
+  Clock, 
+  ShieldAlert, 
+  Target, 
+  ThumbsUp, 
+  MessageSquare, 
+  Globe, 
+  Building2, 
+  LightbulbOff, 
+  Trash2 
 } from 'lucide-react';
+
+const MapView = dynamic(() => import('@/components/map/map-view').then(mod => mod.MapView), { 
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full min-h-[350px] bg-[#e8ecf1] dark:bg-slate-900 flex flex-col items-center justify-center text-slate-500">
+      <div className="flex items-center gap-2 bg-white/90 dark:bg-slate-800/90 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-md backdrop-blur-xs">
+        <Loader2 className="w-4 h-4 animate-spin text-[#0057B8]" />
+        <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Membuka Peta & Titik Laporan...</span>
+      </div>
+    </div>
+  )
+});
 
 function DashboardContent() {
   const { reports } = useLaporKuyStore();
@@ -338,13 +349,14 @@ function DashboardContent() {
               <Link key={report.id} href={`/laporan/${report.id}`} className="block">
                 <Card className="p-3.5 hover:shadow-md transition-all border-slate-200/80 rounded-xl group bg-white">
                   <div className="flex items-start gap-3">
-                    <Image
-                      src={report.photoUrl}
+                    <img
+                      src={report.photoUrl || '/images/reports/amblas.jpg'}
                       alt={report.title}
-                      width={64}
-                      height={64}
-                      loading="lazy"
-                      className="h-16 w-16 rounded-lg object-cover border border-slate-100 shrink-0"
+                      loading="eager"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/images/reports/amblas.jpg';
+                      }}
+                      className="h-16 w-16 rounded-lg object-cover border border-slate-100 shrink-0 bg-slate-100"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-1">
