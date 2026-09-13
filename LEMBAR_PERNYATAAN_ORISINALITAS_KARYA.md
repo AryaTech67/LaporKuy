@@ -25,7 +25,7 @@ Demikian lembar pernyataan orisinalitas karya ini kami buat dengan sebenar-benar
 
 ---
 
-Bogor, 13 September 2026
+Bogor, 15 September 2026
 
 **Yang membuat pernyataan,**  
 **Ketua Tim**

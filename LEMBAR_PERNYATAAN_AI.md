@@ -73,7 +73,7 @@ Selama proses coding bersama AI, kami menemukan 3 kendala teknis utama yang haru
 
 ---
 
-Bogor, 13 September 2026
+Bogor, 15 September 2026
 
 **Yang menyatakan,**  
 **Ketua Tim**
