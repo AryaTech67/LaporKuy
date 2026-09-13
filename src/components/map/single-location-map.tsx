@@ -76,7 +76,9 @@ export default function SingleLocationMap({
         attributionControl={false}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+          attribution='&copy; Esri &copy; OpenStreetMap contributors'
+          maxZoom={19}
         />
         <MapRecenter lat={lat} lng={lng} />
         <Marker position={position} icon={createPinIcon()}>

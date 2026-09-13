@@ -21,25 +21,25 @@ interface MapViewProps {
   className?: string;
 }
 
-// Ultra-fast CDN tile servers with zero API key requirement & global edge caching
+// Ultra-fast CDN tile servers with zero API key requirement & clean visuals
 const TILE_PRESETS = {
-  voyager: {
-    id: 'voyager',
+  streets: {
+    id: 'streets',
     label: 'Peta Jalan',
     icon: '🗺️',
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    subdomains: ['a', 'b', 'c', 'd'],
-    attribution: '&copy; CartoDB &copy; OpenStreetMap',
-    maxZoom: 20,
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    subdomains: ['server'],
+    attribution: '&copy; Esri &copy; OpenStreetMap contributors',
+    maxZoom: 19,
   },
   dark: {
     id: 'dark',
     label: 'Mode Gelap',
     icon: '🌙',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    subdomains: ['a', 'b', 'c', 'd'],
-    attribution: '&copy; CartoDB &copy; OpenStreetMap',
-    maxZoom: 20,
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    subdomains: ['server'],
+    attribution: '&copy; Esri &copy; OpenStreetMap',
+    maxZoom: 19,
   },
   satellite: {
     id: 'satellite',
@@ -106,7 +106,7 @@ export function MapView({
   className = '',
 }: MapViewProps) {
   const [selectedPin, setSelectedPin] = useState<Report | null>(reports[0] || null);
-  const [mapTheme, setMapTheme] = useState<TilePresetKey>('voyager');
+  const [mapTheme, setMapTheme] = useState<TilePresetKey>('streets');
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   // Keep selectedPin updated if reports change
