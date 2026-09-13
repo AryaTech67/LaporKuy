@@ -133,19 +133,43 @@ export default function ProfilPage() {
   const handleAvatarFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > 10 * 1024 * 1024) {
         toast.error('Ukuran foto terlalu besar', {
-          description: 'Maksimal ukuran foto adalah 5MB.',
+          description: 'Maksimal ukuran foto adalah 10MB.',
         });
         return;
       }
       const reader = new FileReader();
       reader.onload = (event) => {
-        const newAvatar = event.target?.result as string;
-        if (newAvatar) {
-          setAvatar(newAvatar);
-          updateProfile({ avatar: newAvatar });
-          toast.success('Foto profile berhasil diperbarui!');
+        const rawSrc = event.target?.result as string;
+        if (rawSrc) {
+          const img = new window.Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const maxDim = 160;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > maxDim) {
+                height = Math.round((height * maxDim) / width);
+                width = maxDim;
+              }
+            } else {
+              if (height > maxDim) {
+                width = Math.round((width * maxDim) / height);
+                height = maxDim;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0, width, height);
+            const compressed = canvas.toDataURL('image/jpeg', 0.82);
+            setAvatar(compressed);
+            updateProfile({ avatar: compressed });
+            toast.success('Foto profil berhasil diperbarui!');
+          };
+          img.src = rawSrc;
         }
       };
       reader.readAsDataURL(file);

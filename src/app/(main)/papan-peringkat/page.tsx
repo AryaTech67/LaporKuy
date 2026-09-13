@@ -63,79 +63,15 @@ function LeaderboardAvatar({
   );
 }
 
-// Fallback initial profiles to guarantee 0ms loading without ever hanging on a spinner
-const INITIAL_FALLBACK_PROFILES = [
-  {
-    id: 'usr-001',
-    name: 'Budi Santoso',
-    email: 'budi@example.com',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-    points: 485,
-    level: 'Pahlawan Kota',
-    xp: 1420,
-    total_reports: 12,
-    completed_reports: 8,
-    district: 'Kec. Wonokromo'
-  },
-  {
-    id: 'usr-002',
-    name: 'Ahmad Fauzi',
-    email: 'ahmad@example.com',
-    avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&auto=format&fit=crop&q=80',
-    points: 340,
-    level: 'Warga Aktif',
-    xp: 890,
-    total_reports: 7,
-    completed_reports: 5,
-    district: 'Kec. Rungkut'
-  },
-  {
-    id: 'usr-003',
-    name: 'Dewi Lestari',
-    email: 'dewi@example.com',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-    points: 290,
-    level: 'Warga Aktif',
-    xp: 640,
-    total_reports: 5,
-    completed_reports: 4,
-    district: 'Kec. Sukolilo'
-  },
-  {
-    id: 'usr-004',
-    name: 'Rian Hidayat',
-    email: 'rian@example.com',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    points: 175,
-    level: 'Warga Aktif',
-    xp: 380,
-    total_reports: 4,
-    completed_reports: 2,
-    district: 'Kec. Dukuh Pakis'
-  },
-  {
-    id: 'usr-005',
-    name: 'Siti Rahma',
-    email: 'siti@example.com',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-    points: 120,
-    level: 'Pemula',
-    xp: 220,
-    total_reports: 3,
-    completed_reports: 1,
-    district: 'Kec. Genteng'
-  }
-];
-
 export default function LeaderboardPage() {
   const { profile: currentProfile, reports: storeReports } = useLaporKuyStore();
   const { location: userLoc } = useUserLocation();
   const [period, setPeriod] = useState<'weekly' | 'monthly' | 'alltime'>('monthly');
   const [activeTab, setActiveTab] = useState<'users' | 'districts'>('users');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Raw data from Supabase, initialized instantly from cache or fallback
+  // Raw data from Supabase only (persisted in cache for instant subsequent loads)
   const [profiles, setProfiles] = useState<any[]>(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -146,7 +82,7 @@ export default function LeaderboardPage() {
         }
       } catch (e) {}
     }
-    return INITIAL_FALLBACK_PROFILES;
+    return [];
   });
 
   const [reports, setReports] = useState<any[]>(() => {
@@ -162,20 +98,20 @@ export default function LeaderboardPage() {
     return storeReports && storeReports.length > 0 ? storeReports : [];
   });
 
-  // Sync with store reports if local reports is empty
+  // If cached profiles exist on mount, don't show the initial full loading screen
   useEffect(() => {
-    if ((!reports || reports.length === 0) && storeReports && storeReports.length > 0) {
-      setReports(storeReports);
+    if (profiles.length > 0) {
+      setIsLoading(false);
     }
-  }, [storeReports, reports]);
+  }, [profiles.length]);
 
   const supabase = useMemo(() => createClient(), []);
 
-  // Fetch real data from Supabase in the background with strict timeout
+  // Fetch 100% authentic data from Supabase
   const fetchData = useCallback(async (showRefreshing = false) => {
     if (showRefreshing) setIsRefreshing(true);
 
-    function fetchWithTimeout<T>(promise: PromiseLike<T>, timeoutMs = 1500): Promise<T> {
+    function fetchWithTimeout<T>(promise: PromiseLike<T>, timeoutMs = 8000): Promise<T> {
       return Promise.race([
         Promise.resolve(promise),
         new Promise<T>((_, reject) => setTimeout(() => reject(new Error('Supabase request timeout')), timeoutMs)),
@@ -184,7 +120,7 @@ export default function LeaderboardPage() {
 
     try {
       const [profilesRes, reportsRes] = await Promise.allSettled([
-        fetchWithTimeout(supabase.from('profiles').select('*').order('points', { ascending: false }).limit(50)),
+        fetchWithTimeout(supabase.from('profiles').select('*').order('points', { ascending: false }).limit(100)),
         fetchWithTimeout(supabase.from('reports').select('*').limit(100)),
       ]);
 
@@ -206,7 +142,7 @@ export default function LeaderboardPage() {
         }
       }
     } catch (err) {
-      console.warn('Leaderboard background sync notice:', err);
+      console.warn('Leaderboard Supabase sync notice:', err);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -234,19 +170,27 @@ export default function LeaderboardPage() {
     };
   }, [fetchData, supabase]);
 
-  // Compute users leaderboard dynamically from real Supabase data ONLY (No dummy locations)
+  // Compute users leaderboard dynamically from real Supabase data ONLY (No dummy users or fake locations)
   const currentLeaderboardData = useMemo<LeaderboardUser[]>(() => {
     if (!profiles || profiles.length === 0) return [];
 
-    // eslint-disable-next-line react-hooks/purity
+    // Deduplicate profiles by email or normalized name
+    const seen = new Set<string>();
+    const uniqueProfiles = profiles.filter((p) => {
+      const key = (p.email || p.name || p.id).toLowerCase().trim();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
     const now = Date.now();
     const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
     const oneMonthAgo = now - 30 * 24 * 60 * 60 * 1000;
 
-    const mappedUsers = profiles.map((p) => {
+    const mappedUsers = uniqueProfiles.map((p) => {
       // Find reports for this user in Supabase
       const userReports = reports.filter(
-        (r) => r.user_id === p.id || (r.user_name && r.user_name.toLowerCase() === p.name?.toLowerCase())
+        (r) => r.user_id === p.id || (r.user_name && r.user_name.toLowerCase().trim() === p.name?.toLowerCase().trim())
       );
 
       const isCurrentUser =
@@ -272,8 +216,8 @@ export default function LeaderboardPage() {
         // 3. Current user's active GPS detection
         district = userLoc.city || userLoc.fullLocation;
       } else {
-        // 4. Registered citizen with no reports or location yet — do NOT invent dummy kecamatan
-        district = 'Belum ada laporan';
+        // 4. Registered citizen with no reports yet
+        district = 'Warga Terdaftar';
       }
 
       // Filter reports based on period
@@ -284,31 +228,36 @@ export default function LeaderboardPage() {
         periodReports = userReports.filter((r) => new Date(r.created_at).getTime() >= oneMonthAgo);
       }
 
-      // Calculate points dynamically according to period
-      const basePoints = p.points || 0;
-      let calculatedPoints = basePoints;
-      let periodReportsCount = p.total_reports || userReports.length || 0;
+      // Calculate points dynamically from actual Supabase records
+      const submittedCount = Math.max(p.total_reports || 0, userReports.length);
+      const completedCount = Math.max(p.completed_reports || 0, userReports.filter((r) => r.status === 'Selesai').length);
+      const upvotesCount = userReports.reduce((acc, r) => acc + (r.upvotes || 0), 0) || (p.total_upvotes_received || 0);
+
+      const calculatedFromReports = (submittedCount * 60) + (completedCount * 40) + (upvotesCount * 10);
+      const basePoints = Math.max(p.points || 0, calculatedFromReports);
+      const finalPoints = basePoints > 0 ? basePoints : 25; // Base starter appreciation for registered citizen
+
+      let calculatedPoints = finalPoints;
+      let periodReportsCount = periodReports.length > 0 ? periodReports.length : submittedCount;
 
       if (period === 'weekly') {
-        calculatedPoints = Math.round(basePoints * 0.2) + periodReports.length * 20;
+        calculatedPoints = Math.round(finalPoints * 0.35) + (periodReports.length * 30);
         periodReportsCount = periodReports.length;
       } else if (period === 'monthly') {
-        calculatedPoints = Math.round(basePoints * 0.5) + periodReports.length * 20;
-        periodReportsCount = periodReports.length > 0 ? periodReports.length : Math.min(p.total_reports || 0, 5);
+        calculatedPoints = Math.round(finalPoints * 0.75) + (periodReports.length * 25);
+        periodReportsCount = periodReports.length > 0 ? periodReports.length : submittedCount;
       }
 
       // Dynamic Level check
-      const currentXp = p.xp || 0;
+      const currentXp = Math.max(p.xp || 0, calculatedPoints * 3);
       let userLevel = p.level;
       if (!userLevel || userLevel === 'Pemula') {
-        if (currentXp >= 2000) userLevel = 'Legenda Kota';
-        else if (currentXp >= 1000) userLevel = 'Pahlawan Kota';
-        else if (currentXp >= 300) userLevel = 'Warga Aktif';
+        if (currentXp >= 600) userLevel = 'Pahlawan Kota';
+        else if (currentXp >= 200) userLevel = 'Warga Aktif';
         else userLevel = 'Pemula';
       }
 
       // Authentic Avatar Resolution:
-      // Priority: use currentProfile.avatar for current user if available, otherwise p.avatar
       const userRawAvatar = isCurrentUser && currentProfile?.avatar ? currentProfile.avatar : p.avatar;
       const initialsAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name || 'User')}&background=003B73&color=fff&size=128&bold=true`;
       const avatar = userRawAvatar || initialsAvatar;
