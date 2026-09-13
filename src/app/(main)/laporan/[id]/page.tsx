@@ -208,9 +208,9 @@ export default function DetailLaporanPage({ params }: { params: Promise<{ id: st
                 <span className="font-semibold text-foreground" suppressHydrationWarning>{new Date(report.createdAt).toLocaleDateString('id-ID')}</span>
               </div>
               <div>
-                <span className="text-muted-foreground block text-[10px]">Verifikasi AI:</span>
-                <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                  {report.aiAuthenticityScore || 98}% Asli (Bebas Edit)
+                <span className="text-muted-foreground block text-[10px]">Status Verifikasi:</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  {report.status === 'Pending' ? 'Menunggu Verifikasi Admin' : 'Terverifikasi Valid'}
                 </span>
               </div>
               <div>
@@ -360,12 +360,12 @@ export default function DetailLaporanPage({ params }: { params: Promise<{ id: st
                 </div>
                 <div>
                   <span className={`text-xs font-bold ${report.status === 'Pending' ? 'text-amber-600 dark:text-amber-400' : 'text-foreground'}`}>
-                    Verifikasi AI & Admin
+                    Verifikasi Admin & Dinas
                   </span>
                   <span className="text-[10px] text-muted-foreground block">
                     {report.status === 'Pending'
                       ? 'Sedang ditinjau oleh tim verifikator kota'
-                      : `Skor AI: ${report.aiAuthenticityScore || 98}% Valid`}
+                      : 'Telah tervalidasi & terdaftar di dinas'}
                   </span>
                 </div>
               </div>

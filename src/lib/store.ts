@@ -599,6 +599,10 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
       console.error("Error updating profile or notification in supabase", e);
     }
     
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('laporkuy_store_update'));
+    }
+
     return newReport;
   };
 
@@ -792,6 +796,10 @@ function useLaporKuyStoreInternal(): LaporKuyStoreValue {
         } catch (e) {
           console.warn('Notification insert warning:', e);
         }
+      }
+
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('laporkuy_store_update'));
       }
     } catch (err) {
       console.warn('Supabase status sync error:', err);

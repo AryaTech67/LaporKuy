@@ -428,7 +428,7 @@ function BuatLaporanForm() {
         lng: location.lng,
         photoUrl: photoUrl,
         description: description || 'Laporan pengaduan publik masyarakat.',
-        status: 'Terverifikasi',
+        status: 'Pending',
         userId: currentUserId,
         userName: currentUserName,
         isUrgent,
@@ -437,7 +437,7 @@ function BuatLaporanForm() {
       });
 
       setIsSubmitting(false);
-      await sendTelegramLog(`<b>📢 Laporan Baru Dibuat</b>\n\n<b>ID:</b> <code>${created.id}</code>\n<b>Judul:</b> ${selectedCategory} di ${location.district}\n<b>Deskripsi:</b> ${description || 'Tidak ada deskripsi'}\n<b>Kategori:</b> ${selectedCategory}\n<b>Lokasi:</b> ${location.address}\n<b>Kecamatan:</b> ${location.district}\n<b>Koordinat:</b> <code>${location.lat}, ${location.lng}</code>\n<b>Tingkat Keparahan:</b> ${aiResult?.severity || 7}/10\n<b>Darurat:</b> ${isUrgent ? '⚠️ Ya' : 'Tidak'}\n<b>Pelapor:</b> ${currentUserName}\n<b>User ID:</b> <code>${currentUserId}</code>\n<b>Status:</b> Terverifikasi\n<b>Waktu:</b> ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'long', timeStyle: 'medium' })}`);
+      await sendTelegramLog(`<b>📢 Laporan Baru Dibuat</b>\n\n<b>ID:</b> <code>${created.id}</code>\n<b>Judul:</b> ${selectedCategory} di ${location.district}\n<b>Deskripsi:</b> ${description || 'Tidak ada deskripsi'}\n<b>Kategori:</b> ${selectedCategory}\n<b>Lokasi:</b> ${location.address}\n<b>Kecamatan:</b> ${location.district}\n<b>Koordinat:</b> <code>${location.lat}, ${location.lng}</code>\n<b>Tingkat Keparahan:</b> ${aiResult?.severity || 7}/10\n<b>Darurat:</b> ${isUrgent ? '⚠️ Ya' : 'Tidak'}\n<b>Pelapor:</b> ${currentUserName}\n<b>User ID:</b> <code>${currentUserId}</code>\n<b>Status:</b> Pending (Menunggu Verifikasi)\n<b>Waktu:</b> ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'long', timeStyle: 'medium' })}`);
       router.push(`/laporan/${created.id}`);
     } catch (error) {
       console.error("Gagal mengirim laporan:", error);
