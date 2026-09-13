@@ -172,35 +172,42 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
 
-        {/* Mobile & Tablet Nav Row */}
-        <div className="md:hidden border-t border-slate-200/80 dark:border-slate-800 px-4 py-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none bg-slate-50/50 dark:bg-slate-900/50">
-          <Link
-            href="/admin"
-            className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md whitespace-nowrap transition-colors ${
-              pathname === '/admin'
-                ? 'text-[#0057B8] dark:text-white bg-white dark:bg-slate-800 border border-blue-200 dark:border-slate-700 shadow-2xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
-            }`}
-          >
-            <LayoutDashboard className="w-3.5 h-3.5" />
-            Dashboard
-          </Link>
-          <Link
-            href="/embed/map"
-            className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 whitespace-nowrap"
-          >
-            <Map className="w-3.5 h-3.5" />
-            Peta Sebaran
-          </Link>
-          <Link
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-slate-500 hover:text-[#0057B8] whitespace-nowrap"
-            title="Buka beranda utama website di tab baru"
-          >
-            <span>Lihat Website ↗</span>
-          </Link>
+        {/* Mobile App-Style Segmented Navigation */}
+        <div className="md:hidden border-t border-slate-200/80 dark:border-slate-800 px-3 py-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+          <div className="grid grid-cols-3 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl gap-1 text-center">
+            <Link
+              href="/admin"
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs font-bold rounded-lg transition-all ${
+                pathname === '/admin'
+                  ? 'text-[#0057B8] dark:text-blue-400 bg-white dark:bg-slate-900 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              }`}
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span>Dashboard</span>
+            </Link>
+            <Link
+              href="/embed/map"
+              className={`flex items-center justify-center gap-1.5 py-1.5 px-2 text-xs font-bold rounded-lg transition-all ${
+                pathname === '/embed/map'
+                  ? 'text-[#0057B8] dark:text-blue-400 bg-white dark:bg-slate-900 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              }`}
+            >
+              <Map className="w-3.5 h-3.5" />
+              <span>Peta</span>
+            </Link>
+            <Link
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1 py-1.5 px-2 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-[#0057B8] rounded-lg transition-all"
+              title="Buka beranda utama website di tab baru"
+            >
+              <span>Lihat Web</span>
+              <span className="text-[10px] opacity-70">↗</span>
+            </Link>
+          </div>
         </div>
       </header>
 

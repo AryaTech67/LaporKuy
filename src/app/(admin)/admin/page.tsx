@@ -133,6 +133,7 @@ export default function AdminPage() {
   const terverifikasiCount = reports.filter((r) => r.status === 'Terverifikasi').length;
   const inProgressCount = reports.filter((r) => r.status === 'Diproses').length;
   const completedCount = reports.filter((r) => r.status === 'Selesai').length;
+  const rejectedCount = reports.filter((r) => r.status === 'Ditolak').length;
 
   // Filter logic
   const filteredReports = reports.filter((r) => {
@@ -284,20 +285,20 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-6 space-y-6 font-sans">
+    <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 space-y-4 sm:space-y-6 font-sans">
       
       {/* ── 1. COMMAND HEADER & LIVE STATUS ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-b border-slate-200 dark:border-slate-800 pb-3.5 sm:pb-5">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-bold text-[#0057B8] dark:text-blue-400 uppercase tracking-wider">
+          <div className="flex items-center gap-2 mb-0.5 sm:mb-1">
+            <span className="text-[10px] sm:text-xs font-bold text-[#0057B8] dark:text-blue-400 uppercase tracking-wider">
               Pusat Kendali Pengaduan Warga
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
-            Daftar Aduan Infrastruktur Kota
+          <h1 className="text-xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-slate-100">
+            Daftar Aduan Kota
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-0.5 hidden sm:block">
             Verifikasi aduan masuk warga, delegasikan ke dinas teknis, dan perbarui progres perbaikan secara real-time.
           </p>
         </div>
@@ -309,11 +310,11 @@ export default function AdminPage() {
             disabled={isRefreshing}
             variant="outline"
             size="sm"
-            className="h-9 px-3.5 rounded-lg border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold gap-2 shadow-xs hover:border-slate-300"
+            className="h-8.5 sm:h-9 px-3 sm:px-3.5 rounded-xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold gap-1.5 shadow-xs hover:border-slate-300"
             title="Sinkronkan data dari Supabase sekarang"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-[#0057B8] ${isRefreshing ? 'animate-spin' : ''}`} />
-            <span>{isRefreshing ? 'Menyinkronkan...' : 'Segarkan Data'}</span>
+            <span>{isRefreshing ? 'Sinkron...' : 'Segarkan Data'}</span>
           </Button>
 
           {reports.length > 0 && (
@@ -321,7 +322,7 @@ export default function AdminPage() {
               onClick={() => setShowClearAllModal(true)}
               variant="outline"
               size="sm"
-              className="h-9 px-3 rounded-lg border-rose-200 dark:border-rose-900 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-semibold gap-1.5"
+              className="h-8.5 sm:h-9 px-2.5 sm:px-3 rounded-xl border-rose-200 dark:border-rose-900 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-semibold gap-1.5"
               title="Hapus semua laporan di database"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -331,93 +332,93 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* ── 2. METRIC CARDS (CLEAN CIVIC OVERVIEW) ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      {/* ── 2. METRIC CARDS (CLEAN CIVIC OVERVIEW - COMPACT ON MOBILE) ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
         {/* Total Laporan */}
-        <Card className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Total Aduan Masuk</span>
-            <FileText className="w-4 h-4 text-slate-400" />
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400">Total Aduan</span>
+            <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" />
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 mt-2 tabular-nums">
+          <div className="text-xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 mt-1 sm:mt-2 tabular-nums">
             {totalCount}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">
+          <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5 sm:mt-1 hidden sm:block">
             Data asli tersinkron dari Supabase
           </p>
         </Card>
 
         {/* Perlu Verifikasi */}
-        <Card className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-amber-200/80 dark:border-amber-900/50 shadow-xs relative overflow-hidden">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-amber-200/80 dark:border-amber-900/50 shadow-xs relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 bg-amber-500/5 rounded-full -mr-4 -mt-4 pointer-events-none" />
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block animate-pulse" />
-              Perlu Verifikasi
+            <span className="text-[11px] sm:text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block animate-pulse" />
+              Verifikasi
             </span>
-            <AlertCircle className="w-4 h-4 text-amber-500" />
+            <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-amber-900 dark:text-amber-300 mt-2 tabular-nums">
+          <div className="text-xl sm:text-3xl font-black text-amber-900 dark:text-amber-300 mt-1 sm:mt-2 tabular-nums">
             {pendingCount}
           </div>
-          <p className="text-[11px] text-amber-700/80 dark:text-amber-400 mt-1">
-            {pendingCount > 0 ? 'Menunggu peninjauan admin' : 'Semua aduan terverifikasi'}
+          <p className="text-[10px] sm:text-[11px] text-amber-700/80 dark:text-amber-400 mt-0.5 sm:mt-1">
+            {pendingCount > 0 ? `${pendingCount} aduan baru` : 'Semua terverifikasi'}
           </p>
         </Card>
 
         {/* Dalam Penanganan Dinas */}
-        <Card className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-blue-200/80 dark:border-blue-900/50 shadow-xs">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-blue-200/80 dark:border-blue-900/50 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
-              Dalam Penanganan
+            <span className="text-[11px] sm:text-xs font-semibold text-blue-700 dark:text-blue-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
+              Penanganan
             </span>
-            <Building2 className="w-4 h-4 text-blue-500" />
+            <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500" />
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-blue-900 dark:text-blue-300 mt-2 tabular-nums">
+          <div className="text-xl sm:text-3xl font-black text-blue-900 dark:text-blue-300 mt-1 sm:mt-2 tabular-nums">
             {inProgressCount + terverifikasiCount}
           </div>
-          <p className="text-[11px] text-blue-700/80 dark:text-blue-400 mt-1">
-            {terverifikasiCount} terverifikasi • {inProgressCount} dikerjakan
+          <p className="text-[10px] sm:text-[11px] text-blue-700/80 dark:text-blue-400 mt-0.5 sm:mt-1">
+            {inProgressCount} diproses dinas
           </p>
         </Card>
 
         {/* Selesai Beres */}
-        <Card className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-emerald-200/80 dark:border-emerald-900/50 shadow-xs">
+        <Card className="p-3 sm:p-4 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl border border-emerald-200/80 dark:border-emerald-900/50 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+            <span className="text-[11px] sm:text-xs font-semibold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
               Selesai Tuntas
             </span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 mt-2 tabular-nums">
+          <div className="text-xl sm:text-3xl font-black text-emerald-900 dark:text-emerald-300 mt-1 sm:mt-2 tabular-nums">
             {completedCount}
           </div>
-          <p className="text-[11px] text-emerald-700/80 dark:text-emerald-400 mt-1">
-            Infrastruktur telah tuntas diperbaiki
+          <p className="text-[10px] sm:text-[11px] text-emerald-700/80 dark:text-emerald-400 mt-0.5 sm:mt-1">
+            Tuntas diperbaiki
           </p>
         </Card>
       </div>
 
       {/* ── 3. SEARCH & FILTERS BAR ── */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-2.5 sm:space-y-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
           {/* Search Box */}
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <Input
-              placeholder="Cari nomor aduan (REP-xxxx), judul, kecamatan, atau nama warga..."
+              placeholder="Cari nomor aduan, judul, lokasi, pelapor..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-9 h-10 text-xs sm:text-sm rounded-lg border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus-visible:ring-[#0057B8]"
+              className="pl-10 pr-9 h-9.5 sm:h-10 text-xs sm:text-sm rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus-visible:ring-[#0057B8]"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
@@ -428,7 +429,7 @@ export default function AdminPage() {
             <select
               value={selectedDinasFilter}
               onChange={(e) => setSelectedDinasFilter(e.target.value)}
-              className="h-10 px-3 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-[#0057B8]"
+              className="w-full sm:w-auto h-9.5 sm:h-10 px-3 text-xs font-semibold rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-[#0057B8]"
             >
               <option value="Semua Dinas">Semua Dinas Penanggung Jawab</option>
               {dinasOptions.map((d) => (
@@ -440,29 +441,32 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Status Filter Tabs */}
-        <div className="flex items-center justify-between gap-2 overflow-x-auto scrollbar-none pt-1 border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-1.5 shrink-0 py-1">
+        {/* Status Filter Tabs (Horizontal Scrollable Chips with Live Counter Badges) */}
+        <div className="flex items-center justify-between gap-2 overflow-x-auto scrollbar-none pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-1.5 shrink-0 py-0.5">
             {[
-              { id: 'Semua', label: 'Semua Aduan' },
-              { id: 'Perlu Verifikasi', label: 'Perlu Verifikasi (Pending)' },
-              { id: 'Terverifikasi', label: 'Terverifikasi' },
-              { id: 'Diproses', label: 'Sedang Diproses' },
-              { id: 'Selesai', label: 'Selesai Beres' },
-              { id: 'Ditolak', label: 'Ditolak' }
+              { id: 'Semua', label: 'Semua', count: reports.length },
+              { id: 'Perlu Verifikasi', label: 'Perlu Verifikasi', count: pendingCount },
+              { id: 'Terverifikasi', label: 'Terverifikasi', count: terverifikasiCount },
+              { id: 'Diproses', label: 'Diproses', count: inProgressCount },
+              { id: 'Selesai', label: 'Selesai Beres', count: completedCount },
+              { id: 'Ditolak', label: 'Ditolak', count: rejectedCount }
             ].map((tab) => {
               const isActive = selectedStatusFilter === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setSelectedStatusFilter(tab.id)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all whitespace-nowrap cursor-pointer ${
+                  className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                     isActive
                       ? 'bg-[#0057B8] text-white shadow-xs'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800'
                   }`}
                 >
-                  {tab.label}
+                  <span>{tab.label}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${isActive ? 'bg-white/25 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+                    {tab.count}
+                  </span>
                 </button>
               );
             })}
@@ -479,7 +483,7 @@ export default function AdminPage() {
       {/* ================= MOBILE VIEW (< 768px): TICKET CARDS ================= */}
       <div className="block md:hidden space-y-3">
         {filteredReports.length === 0 ? (
-          <div className="p-10 text-center bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
             <FileText className="w-8 h-8 text-slate-300 mx-auto" />
             <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Tidak ada aduan ditemukan</p>
             <p className="text-xs text-slate-400">Silakan ubah kata kunci atau ganti filter status aduan.</p>
@@ -490,15 +494,15 @@ export default function AdminPage() {
             return (
               <Card
                 key={report.id}
-                className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800 p-4 space-y-3.5 shadow-xs"
+                className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-3.5 space-y-3 shadow-xs"
               >
                 {/* Header: ID + Category + Status */}
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex items-center gap-1.5 min-w-0">
                     <span className="font-mono text-xs font-bold text-slate-900 dark:text-slate-100">
                       #{report.id}
                     </span>
-                    <Badge variant="outline" className={`text-[10px] font-bold px-2 py-0.5 border ${getCategoryBadgeClass(report.category)}`}>
+                    <Badge variant="outline" className={`text-[10px] font-bold px-2 py-0.5 border rounded-md ${getCategoryBadgeClass(report.category)}`}>
                       {report.category}
                     </Badge>
                   </div>
@@ -513,7 +517,8 @@ export default function AdminPage() {
                 <div className="flex items-start gap-3">
                   <div
                     onClick={() => report.photoUrl && setPhotoPreviewUrl(report.photoUrl)}
-                    className="w-16 h-16 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200 dark:border-slate-700 relative cursor-pointer group"
+                    className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200 dark:border-slate-700 relative cursor-pointer group"
+                    title="Klik untuk perbesar foto"
                   >
                     {report.photoUrl ? (
                       <img
@@ -527,7 +532,7 @@ export default function AdminPage() {
                       </div>
                     )}
                     {report.afterPhotoUrl && (
-                      <span className="absolute bottom-0.5 right-0.5 px-1 py-0.2 rounded text-[8px] font-bold bg-emerald-600 text-white">
+                      <span className="absolute bottom-0.5 right-0.5 px-1 py-0.2 rounded text-[8px] font-bold bg-emerald-600 text-white shadow-2xs">
                         ✓ After
                       </span>
                     )}
@@ -541,63 +546,64 @@ export default function AdminPage() {
                       <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span>{report.address}</span>
                     </p>
-                    <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                      <span>Warga: <strong>{report.userName || 'Warga'}</strong></span>
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                      <span>Oleh: <strong>{report.userName || 'Warga'}</strong></span>
                       <span>•</span>
-                      <span>Keparahan: {report.severity}/10</span>
+                      <span className="font-semibold text-amber-600 dark:text-amber-400">Skor: {report.severity}/10</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Dinas detail */}
                 <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <span className="truncate flex items-center gap-1.5 font-medium">
+                  <span className="truncate flex items-center gap-1.5 font-medium text-[11px]">
                     <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                     <span>{report.assignedDinas || 'Dinas Bina Marga'}</span>
                   </span>
-                  <span className="text-[11px] text-slate-400">
-                    {new Date(report.createdAt).toLocaleDateString('id-ID')}
+                  <span className="text-[11px] text-slate-400 shrink-0">
+                    {new Date(report.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
                   </span>
                 </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2 pt-1">
-                  {report.status === 'Pending' && (
+                {/* Mobile Actions: Clean, Ergonomic, App-like */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    {report.status === 'Pending' && (
+                      <Button
+                        onClick={() => handleQuickVerify(report)}
+                        size="sm"
+                        className="flex-1 h-9 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Verifikasi Cepat</span>
+                      </Button>
+                    )}
                     <Button
-                      onClick={() => handleQuickVerify(report)}
+                      onClick={() => handleOpenModal(report)}
                       size="sm"
-                      className="h-8.5 px-3 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 shadow-xs cursor-pointer"
+                      className="flex-1 h-9 text-xs font-bold rounded-xl bg-[#0057B8] hover:bg-[#004494] text-white shadow-xs cursor-pointer"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Verifikasi
+                      Tindak Lanjut
                     </Button>
-                  )}
-                  <Button
-                    onClick={() => handleOpenModal(report)}
-                    size="sm"
-                    className="flex-1 h-8.5 text-xs font-bold rounded-lg bg-[#0057B8] hover:bg-[#004494] text-white shadow-xs cursor-pointer"
-                  >
-                    Tindak Lanjut
-                  </Button>
-                  <Link href={`/laporan/${report.id}`} target="_blank">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8.5 w-8.5 p-0 rounded-lg border-slate-200 dark:border-slate-800 text-slate-600 cursor-pointer"
-                      title="Buka tampilan warga"
+                  </div>
+
+                  <div className="flex items-center justify-between pt-0.5">
+                    <Link
+                      href={`/laporan/${report.id}`}
+                      target="_blank"
+                      className="text-xs font-semibold text-slate-500 hover:text-[#0057B8] flex items-center gap-1"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setReportToDelete(report)}
-                    className="h-8.5 w-8.5 p-0 rounded-lg border-rose-200 dark:border-rose-900 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
-                    title="Hapus aduan"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </Button>
+                      <span>Lihat Halaman Publik</span>
+                    </Link>
+                    <button
+                      onClick={() => setReportToDelete(report)}
+                      className="text-xs text-rose-500 hover:text-rose-700 font-semibold flex items-center gap-1 px-2 py-1 rounded-md hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Hapus</span>
+                    </button>
+                  </div>
                 </div>
               </Card>
             );
