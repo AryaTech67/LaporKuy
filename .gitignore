@@ -53,3 +53,8 @@ session-*.md
 
 # Supabase
 supabase/.temp/
+
+# Competition documents (stored in Downloads)
+*LEMBAR*
+*NASKAH*
+*.pdf
