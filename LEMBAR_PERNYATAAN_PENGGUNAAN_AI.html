@@ -6,139 +6,143 @@
   <style>
     @page {
       size: A4;
-      margin: 22mm 20mm 22mm 20mm;
+      margin: 16mm 18mm 16mm 18mm;
     }
     * {
       box-sizing: border-box;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      font-size: 10.5pt;
-      line-height: 1.55;
-      color: #1e293b;
+      font-size: 9.3pt;
+      line-height: 1.45;
+      color: #0f172a;
       margin: 0;
       padding: 0;
       background: #fff;
     }
     .header-title {
       color: #1e3a8a;
-      font-size: 17pt;
+      font-size: 15pt;
       font-weight: 800;
       letter-spacing: 0.5px;
       margin: 0;
       text-transform: uppercase;
+      text-align: center;
     }
     .header-subtitle {
-      color: #2563eb;
-      font-size: 12pt;
+      color: #0057B8;
+      font-size: 11pt;
       font-weight: 700;
-      margin-top: 4px;
-      margin-bottom: 12px;
+      margin-top: 3px;
+      margin-bottom: 8px;
+      text-align: center;
     }
     .divider {
       border: none;
       border-top: 1.5px solid #cbd5e1;
-      margin: 12px 0 16px 0;
+      margin: 8px 0 12px 0;
     }
     .meta-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 14px;
-      font-size: 10.5pt;
+      margin-bottom: 10px;
+      font-size: 9.2pt;
     }
     .meta-table td {
-      padding: 3px 0;
+      padding: 2px 0;
       vertical-align: top;
     }
     .meta-label {
-      width: 170px;
+      width: 160px;
       font-weight: 600;
-      color: #0f172a;
+      color: #1e293b;
     }
     .meta-sep {
       width: 16px;
       text-align: center;
+      color: #64748b;
     }
     .meta-val {
-      color: #334155;
+      color: #0f172a;
     }
     .meta-val ol {
       margin: 0;
       padding-left: 18px;
     }
     .meta-val ol li {
-      margin-bottom: 2px;
+      margin-bottom: 1px;
     }
     .section-title {
       color: #1e3a8a;
-      font-size: 11.5pt;
+      font-size: 10.5pt;
       font-weight: 800;
-      margin-top: 20px;
-      margin-bottom: 8px;
+      margin-top: 14px;
+      margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.3px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 3px;
     }
     .question-title {
       font-weight: 700;
       color: #0f172a;
-      margin-top: 10px;
-      margin-bottom: 8px;
-      font-size: 10.5pt;
+      margin-top: 8px;
+      margin-bottom: 6px;
+      font-size: 9.3pt;
     }
     .highlight-platform {
       font-weight: 700;
-      color: #1d4ed8;
-      font-size: 11pt;
-      margin-bottom: 6px;
+      color: #0057B8;
+      font-size: 10pt;
+      margin-bottom: 4px;
     }
     p {
-      margin: 0 0 10px 0;
+      margin: 0 0 8px 0;
       text-align: justify;
     }
     ul, ol {
-      margin: 4px 0 12px 0;
-      padding-left: 22px;
+      margin: 3px 0 8px 0;
+      padding-left: 20px;
     }
     li {
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       text-align: justify;
     }
     .prompt-box {
       background-color: #f8fafc;
-      border-left: 3.5px solid #3b82f6;
+      border-left: 3.5px solid #0057B8;
       border-radius: 4px;
-      padding: 10px 14px;
-      margin: 10px 0 14px 0;
-      font-size: 9.5pt;
-      line-height: 1.5;
+      padding: 8px 12px;
+      margin: 6px 0 10px 0;
+      font-size: 8.8pt;
+      line-height: 1.42;
       color: #1e293b;
-    }
-    .prompt-box pre, .prompt-box code {
       font-family: Consolas, Monaco, "Courier New", monospace;
       white-space: pre-wrap;
       word-break: break-word;
     }
     .problem-block {
-      background: #fdfdfe;
+      background: #fafafa;
       border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
+      border-radius: 5px;
+      padding: 8px 11px;
+      margin-bottom: 8px;
       page-break-inside: avoid;
     }
     .problem-header {
       font-weight: 700;
       color: #0f172a;
-      margin-bottom: 6px;
+      font-size: 9.1pt;
+      margin-bottom: 4px;
     }
     .badge-label {
       display: inline-block;
-      font-size: 8.5pt;
+      font-size: 7.8pt;
       font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 4px;
+      padding: 1.5px 6px;
+      border-radius: 3px;
       text-transform: uppercase;
-      margin-right: 6px;
+      margin-right: 5px;
     }
     .badge-error {
       background: #fee2e2;
@@ -149,22 +153,27 @@
       color: #1e40af;
     }
     .signature-container {
-      margin-top: 24px;
+      margin-top: 14px;
       page-break-inside: avoid;
       width: 100%;
     }
-    .signature-box {
-      float: right;
-      width: 250px;
-      text-align: left;
+    .sig-table {
+      width: 100%;
+      border-collapse: collapse;
     }
-    .signature-space {
-      height: 70px;
+    .sig-table td {
+      vertical-align: top;
     }
-    .clearfix::after {
-      content: "";
-      clear: both;
-      display: table;
+    .sig-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 6px 8px;
+      background: #fafafa;
+      text-align: center;
+      font-size: 8.2pt;
+    }
+    .sig-space {
+      height: 42px;
     }
     .page-break {
       page-break-before: always;
@@ -173,8 +182,8 @@
 </head>
 <body>
 
-  <div class="header-title">LEMBAR PERNYATAAN</div>
-  <div class="header-title">PENGGUNAAN AI</div>
+  <!-- ════════════════════ PAGE 1 ════════════════════ -->
+  <div class="header-title">LEMBAR PERNYATAAN PENGGUNAAN AI</div>
   <div class="header-subtitle">Exasti 2.0: Web Application Competition</div>
 
   <hr class="divider">
@@ -183,12 +192,12 @@
     <tr>
       <td class="meta-label">Judul Proyek</td>
       <td class="meta-sep">:</td>
-      <td class="meta-val"><strong>LaporKuy</strong></td>
+      <td class="meta-val"><strong>LaporKuy</strong> (Platform Pelaporan Masalah Fasilitas Kota Berbasis Civic-Tech)</td>
     </tr>
     <tr>
       <td class="meta-label">Nama Ketua Tim</td>
       <td class="meta-sep">:</td>
-      <td class="meta-val">Bendzanu Kamagifi</td>
+      <td class="meta-val"><strong>Bendzanu Kamagifi</strong> (NISN: 0093389827)</td>
     </tr>
     <tr>
       <td class="meta-label">Nama Anggota Tim</td>
@@ -206,154 +215,144 @@
   <hr class="divider">
 
   <div class="section-title">A. PENGEMBANGAN</div>
-  <div class="question-title">1. Apa AI Coding Assistant / Platform utama yang tim anda gunakan untuk membangun produk ini?</div>
   
-  <div class="highlight-platform">Antigravity / Gemini 3.1 Pro High</div>
+  <div class="question-title">1. Apa AI Coding Assistant / Platform utama yang tim anda gunakan untuk membangun produk ini?</div>
+  <div class="highlight-platform">Antigravity (Google Gemini)</div>
   <p>
-    Platform utama yang kami gunakan dalam perancangan dan pengembangan aplikasi LaporKuy adalah <strong>Antigravity</strong> yang ditenagai oleh model penalaran tingkat tinggi <strong>Google Gemini 3.1 Pro (High Reasoning/Thinking Mode)</strong>. Antigravity difungsikan sebagai <em>Autonomous Agentic Coding Assistant</em> dan AI Pair Programmer komprehensif yang terintegrasi langsung dengan lingkungan pengembangan lokal (IDE dan Terminal).
+    Platform utama yang kami gunakan adalah <strong>Antigravity</strong> dengan model dasar <strong>Google Gemini</strong>. Kami memanfaatkan AI ini secara praktis sebagai <em>pair programming partner</em> yang terhubung langsung di lingkungan editor kode (IDE) dan terminal lokal.
   </p>
   <p>
-    Keunggulan dan integrasi fungsional yang dimanfaatkan dalam proyek ini meliputi:
+    Peran nyata pemanfaatan AI dalam proyek ini:
   </p>
   <ol>
-    <li><strong>Large Context Window & Multi-File Reasoning:</strong> Mampu memetakan dan menyelaraskan dependensi kode secara holistik lintas ratusan berkas, mencakup Next.js 16 (App Router), TypeScript, Tailwind CSS, Zustand state stores, serta skema Supabase PostgreSQL.</li>
-    <li><strong>Architectural Planning Mode:</strong> Menerapkan <em>Spec-Driven Development</em> melalui penyusunan <em>Implementation Plan</em> terstruktur sebelum eksekusi berkas, sehingga setiap modul dikembangkan secara terukur sesuai spesifikasi kebutuhan produk (PRD).</li>
-    <li><strong>Live Execution & Verification:</strong> Menjalankan eksekusi build, pemeriksaan unit, linting, serta debugging langsung pada terminal lokal untuk memastikan keandalan sistem tanpa kegagalan saat <em>runtime</em> sebelum proses <em>deployment</em>.</li>
+    <li><strong>Akselerasi Pembuatan Kerangka Kode (Scaffolding):</strong> Membantu membuatkan komponen dasar Next.js 16 (App Router), penulisan antarmuka TypeScript (interface/types), dan utilitas Tailwind CSS agar proses pengembangan lebih cepat.</li>
+    <li><strong>Bantuan Debugging Terminal:</strong> Membantu menganalisis pesan error pada terminal lokal saat terjadi kendala kompilasi Webpack, dependensi npm, atau sintaks TypeScript.</li>
+    <li><strong>Eksplorasi Ide Solusi Logika:</strong> Membantu merumuskan logika penanganan status laporan dan struktur penulisan query integrasi Supabase.</li>
   </ol>
 
   <div class="section-title">B. LOGIKA PROMPTING</div>
+
   <div class="question-title">1. Tuliskan Prompt Utama/Pondasi yang tim anda gunakan di awal proyek untuk mendefinisikan aplikasi yang akan tim anda buat kepada AI:</div>
-  
-  <div class="prompt-box">
-    <strong>(ROLE &amp; PERSONA)</strong><br>
-    Bertindaklah sebagai Lead Civic-Tech Architect dan Principal Fullstack Engineer. Anda ditugaskan untuk merancang dan membangun platform digital partisipasi warga perkotaan bernama "LaporKuy" (v2.0) berbasis pendekatan <em>beyond-the-code</em> yang mendukung target SDGs 11 (Sustainable Cities and Communities) dan SDGs 9 (Industry, Innovation, and Infrastructure).<br>
-    Visi Utama: <em>"Lapor masalah kota dalam 30 detik, pantau progres penanganan secara transparan dan real-time."</em><br><br>
 
-    <strong>SYSTEM REQUIREMENTS &amp; SPECIFICATIONS:</strong><br>
-    <strong>1. Core User Flow:</strong><br>
-    • <strong>Frictionless Reporting:</strong> Alur pelaporan cepat (Foto Kerusakan &rarr; Deteksi Koordinat GPS Otomatis &rarr; AI Classification &amp; Scoring &rarr; Submit Laporan).<br>
-    • <strong>Interactive Spatial Dashboard:</strong> Peta interaktif kota (Surabaya dan aglomerasi) dengan penyaringan kategori masalah (Jalan Rusak, Lampu Mati, Sampah, Banjir, Trotoar Difabel), visualisasi zona rawan, dan kartu ringkasan instan.<br>
-    • <strong>Transparency &amp; SLA Monitoring:</strong> Pelacakan status tiket laporan publik (Pending, Terverifikasi, Diproses, Selesai), perhitungan sisa target hari SLA dinas (Dinas Bina Marga, Perhubungan, DLH), serta riwayat perbaikan Before-After.<br>
-    • <strong>Gamified Community Engagement:</strong> Sistem poin loyalitas civic, status tingkatan reputasi (Pemula s.d. Pahlawan Kota), indikator progres XP, tantangan misi harian/mingguan (Quests), penukaran poin (Rewards catalog), sistem verifikasi dukungan warga (Upvoting), dan lencana apresiasi (badges).<br><br>
+  <div class="prompt-box">"Halo! Kami sedang membuat aplikasi web bernama 'LaporKuy' untuk perlombaan Exasti 2.0.
+Aplikasi ini adalah platform civic-tech tempat warga bisa melaporkan masalah fasilitas publik di kota (seperti jalan berlubang, lampu jalan mati, tumpukan sampah, dan saluran banjir).
 
-    <strong>2. Technical Architecture &amp; Constraints:</strong><br>
-    • <strong>Framework:</strong> Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS.<br>
-    • <strong>Bundler Engine:</strong> Konfigurasikan webpack mode (<code>--webpack</code>) untuk menjamin stabilitas eksekusi native build pada lingkungan Windows.<br>
-    • <strong>Design Tokens &amp; Civic Authority System:</strong> Palet warna tegas (Deep Navy Background <code>#020617</code>, Civic Blue <code>#0057B8</code>, Action Signal Orange <code>#F97316</code> khusus tombol aksi pelaporan) dan ergonomi mobile (target sentuh minimum 48px-56px, floating bottom dock).<br>
-    • <strong>State Management &amp; Architecture:</strong> Pisahkan Auth State ke Zustand Singleton Store (<code>auth-store.ts</code>) idempoten guna mencegah infinite redirect loop; Domain Store (<code>store.ts</code>) dengan fallback mock data yang resilien.<br>
-    • <strong>Mapping Engine:</strong> React-Leaflet terintegrasi MapTiler API dengan kalkulasi penempatan penanda deterministik (zero purity violation).<br>
-    • <strong>Cloud Backend (Supabase):</strong> Supabase PostgreSQL 15+ dengan ekstensi <code>uuid-ossp</code>, 7 tabel entitas relasional, Row Level Security (RLS), dan Database Trigger pada <code>auth.users</code>.<br><br>
+Kebutuhan aplikasi yang ingin kami bangun:
+1. Alur Lapor Warga: Form lapor dengan unggah foto kerusakan, input judul, kategori masalah, alamat/koordinat peta, serta deskripsi singkat.
+2. Peta Sebaran Interaktif: Peta kota (studi kasus Surabaya) yang menampilkan titik-titik laporan menggunakan penanda (marker) yang bisa difilter berdasarkan kategori.
+3. Dashboard Status & Tracking: Warga bisa melihat progres laporan (Menunggu Verifikasi, Sedang Ditangani, Selesai Beres) lengkap dengan catatan dari dinas terkait.
+4. Fitur Gamifikasi Civic: Poin keaktifan warga, sistem level/peringkat, dan misi harian agar warga termotivasi ikut menjaga kotanya.
+5. Dashboard Admin Khusus: Panel bagi petugas dinas/admin kota untuk memverifikasi laporan masuk dan mengunggah foto bukti setelah perbaikan.
 
-    <strong>OUTPUT CONTRACT:</strong><br>
-    Hasilkan arsitektur kode modular, teruji (clean build), bebas dependensi usang, dan siap diuji pakai secara responsif baik pada smartphone maupun desktop.
-  </div>
+Tech stack yang kami gunakan:
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Tailwind CSS untuk antarmuka yang modern, responsif, dan ramah pengguna HP
+- Supabase (PostgreSQL) sebagai basis data penyimpanan laporan warga
+- Leaflet / OpenStreetMap untuk tampilan peta interaktif
 
-  <div class="question-title">2. Kendala terbesar apa (bug/error/halusinasi AI) yang tim anda temui selama proses pembuatan, dan bagaimana cara Anda memberikan instruksi ulang (re-prompting) kepada AI untuk menyelesaikannya?</div>
+Tolong bantu buatkan struktur folder awal yang rapi dan rancangan komponen utamanya."</div>
+
+  <!-- ════════════════════ PAGE 2 ════════════════════ -->
+  <div class="page-break"></div>
+
+  <div class="question-title" style="margin-top: 0;">2. Kendala terbesar apa (bug/error/halusinasi AI) yang tim anda temui selama proses pembuatan, dan bagaimana cara Anda memberikan instruksi ulang (re-prompting) kepada AI untuk menyelesaikannya?</div>
   <p>
-    Selama proses pengembangan dengan model AI, kami menemukan 4 kendala kritis yang membutuhkan investigasi mendalam dan instruksi perbaikan (<em>re-prompting</em>) terarah:
+    Selama proses coding bersama AI, kami menemukan 3 kendala teknis utama yang harus kami perbaiki melalui re-prompting terarah:
   </p>
 
   <div class="problem-block">
-    <div class="problem-header">a. Kendala 'AI Slop' pada Desain Antarmuka (UI Terlalu Kaku dan Monoton)</div>
+    <div class="problem-header">a. Error Leaflet Map saat Server-Side Rendering (Window is not defined)</div>
     <p>
-      <span class="badge-label badge-error">Permasalahan</span>
-      Kode antarmuka awal yang dihasilkan oleh AI terperangkap dalam pola generik 'AI slop' dengan karakteristik desain kaku, datar, dan monoton menyerupai template dashboard administratif konvensional: tata letak kotak-kotak kaku (<em>boxy layout</em>) tanpa variasi kedalaman visual, palet warna dingin yang menjemukan, ketiadaan <em>micro-interactions</em> atau animasi transisi status laporan, serta tipografi kaku tanpa hierarki emosional.
+      <span class="badge-label badge-error">Kendala</span>
+      Kode awal yang diberikan AI langsung mengimpor pustaka Leaflet pada komponen halaman Next.js. Hal ini menyebabkan error <code>ReferenceError: window is not defined</code> karena Leaflet mencoba mengakses objek browser saat Next.js masih me-render di sisi server.
     </p>
     <p>
-      <span class="badge-label badge-solution">Solusi &amp; Re-Prompting</span>
-      Kami menginstruksikan AI untuk merombak total antarmuka menjadi <em>Dynamic &amp; Engaging Civic Experience</em>:
-    </p>
-    <ul>
-      <li>Menerapkan sistem kartu modern (squircle tiles bergradasi halus), penataan kedalaman visual (subtle elevation), serta palet warna berkarakter tegas: Deep Navy Background (<code>#020617</code>), Primary Civic Blue (<code>#0057B8</code>), dan Action Signal Orange (<code>#F97316</code>) khusus CTA pelaporan.</li>
-      <li>Mengikis kesan monoton melalui integrasi gamifikasi visual: progress bar XP warga, tampilan lencana reputasi (badges), kartu ringkasan instan, serta stepper linier pelacakan status penanganan.</li>
-      <li>Mengoptimalkan ergonomi sentuh di layar ponsel: floating bottom navigation dock dan tombol aksi Hero setinggi 56px (h-14) ramah jangkauan jempol (<em>thumb zone</em>).</li>
-    </ul>
-  </div>
-
-  <div class="problem-block">
-    <div class="problem-header">b. Mobile Session Verification Loop (Race Condition pada Auth Guard)</div>
-    <p>
-      <span class="badge-label badge-error">Permasalahan</span>
-      AuthGuard membaca status otentikasi dari per-component React store hook. Pada perangkat mobile dengan latensi jaringan fluktuatif, pemanggilan <code>supabase.auth.getSession()</code> belum selesai saat komponen me-render rute terlindungi, memicu flag <code>isInitialized</code> tertunda dan memicu pengalihan prematur berulang ke <code>/login</code> (<em>infinite redirection loop</em>).
-    </p>
-    <p>
-      <span class="badge-label badge-solution">Solusi &amp; Re-Prompting</span>
-      <em>"Refactor autentikasi menjadi Zustand Singleton Store (src/lib/auth-store.ts) dengan inisialisasi strictly idempotent menggunakan flag _booted. Pastikan getSession() hanya dipanggil tepat satu kali saat booting melalui AuthProvider tunggal, dan AuthGuard hanya mengevaluasi pengalihan setelah isInitialized bernilai true."</em>
+      <span class="badge-label badge-solution">Solusi Re-prompting</span>
+      <em>"Komponen Leaflet crash saat build karena dieksekusi di server. Tolong refactor MapView menggunakan next/dynamic dengan opsi ssr: false, dan pastikan Leaflet hanya di-load saat komponen sudah mount di sisi browser client."</em>
     </p>
   </div>
 
   <div class="problem-block">
-    <div class="problem-header">c. React Purity Violation &amp; Marker Glitching pada Komponen Peta (map-view.tsx)</div>
+    <div class="problem-header">b. Desain Tampilan Awal Terlalu Kaku & Monoton (Generic Dashboard)</div>
     <p>
-      <span class="badge-label badge-error">Permasalahan</span>
-      AI menyisipkan fungsi tidak murni <code>Math.random()</code> di dalam perulangan render komponen Leaflet. Hal ini melanggar kemurnian render React, memicu peringatan ESLint, dan menyebabkan titik penanda bergetar serta berpindah posisi (<em>glitching jitter</em>) setiap kali peta digeser atau di-zoom.
+      <span class="badge-label badge-error">Kendala</span>
+      Tampilan awal yang dihasilkan AI terlihat sangat kaku seperti template admin perkantoran lama: tombol-tombol kecil tidak nyaman untuk layar HP, warna abu-abu datar, dan tidak memiliki identitas khas aplikasi civic modern.
     </p>
     <p>
-      <span class="badge-label badge-solution">Solusi &amp; Re-Prompting</span>
-      <em>"Hilangkan Math.random() dari fungsi render MapView. Ganti dengan algoritma pseudo-random hashing deterministik berbasis indeks laporan: <code>const pseudoRandomX = (idx * 0.13) % 0.05</code> agar koordinat penanda tetap konsisten dan stabil pada setiap siklus render."</em>
+      <span class="badge-label badge-solution">Solusi Re-prompting</span>
+      <em>"Rombak UI LaporKuy agar lebih hidup dan modern untuk warga. Gunakan palet civic blue (#0057B8) dipadu aksen oranye pada tombol aksi lapor, buat kartu laporan dengan rounded corner yang lembut, tambahkan navigasi bottom bar untuk mobile, dan buat alur pelaporannya simpel dalam 3 langkah."</em>
     </p>
   </div>
 
   <div class="problem-block">
-    <div class="problem-header">d. Toolchain Native Binding Crash pada Lingkungan Windows (Turbopack SWC Error)</div>
+    <div class="problem-header">c. Sinkronisasi Status Verifikasi Laporan antara Admin dan Frontend Warga</div>
     <p>
-      <span class="badge-label badge-error">Permasalahan</span>
-      Next.js 16 secara bawaan mengaktifkan Turbopack. Pada Windows x64, pustaka native bindings (<code>@next/swc-win32-x64-msvc</code>) mengalami kegagalan (<em>not a valid Win32 application</em>), menyebabkan server pengembangan lokal langsung terhenti mendadak.
+      <span class="badge-label badge-error">Kendala</span>
+      Ketika admin memverifikasi laporan di dashboard admin, perubahan status laporan tidak langsung terlihat di halaman warga tanpa harus me-refresh halaman secara manual.
     </p>
     <p>
-      <span class="badge-label badge-solution">Solusi &amp; Re-Prompting</span>
-      <em>"Perbarui konfigurasi skrip pada package.json dengan menambahkan flag --webpack ('next dev --webpack' dan 'next build --webpack') untuk beralih ke bundler Webpack yang stabil di Windows."</em>
+      <span class="badge-label badge-solution">Solusi Re-prompting</span>
+      <em>"Buatkan mekanisme sinkronisasi state dua arah. Ketika admin mengupdate status atau menambahkan catatan tindak lanjut dinas, perbarui tabel Supabase sekaligus dispatch custom event di browser agar tampilan laporan warga langsung ter-update secara otomatis."</em>
     </p>
   </div>
 
   <div class="question-title">3. Apakah ada komponen kode, desain visual, atau database yang tim anda buat/modifikasi secara manual tanpa bantuan AI? Jika ada, sebutkan bagian mana:</div>
   <p>
-    Ya, terdapat sejumlah komponen arsitektural krusial, konfigurasi database, dan aset visual yang kami rancang dan bangun secara manual tanpa bantuan AI guna menjamin keandalan sistem:
+    Ya, terdapat beberapa bagian penting yang kami kerjakan dan susun secara manual oleh anggota tim:
   </p>
 
   <ol>
     <li>
-      <strong>Konfigurasi Menyeluruh Ekosistem Backend Supabase (Manual):</strong>
-      <ul>
-        <li><strong>Provisioning &amp; Environment Setup:</strong> Mengonfigurasi proyek Supabase cloud secara manual pada dashboard resmi (Project Ref: <code>qgaabxifnyrckkpzqcjk.supabase.co</code>), mengatur kredensial API Keys (<code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code>), URL pengalihan auth, serta menyelaraskan integrasi SSR client/server (<code>@supabase/ssr</code>).</li>
-        <li><strong>Skema Database &amp; Migrasi SQL Manual (<code>supabase/migrations/</code>):</strong>
-          <ul>
-            <li><code>0001_initial_schema.sql</code>: Mengaktifkan ekstensi <code>uuid-ossp</code> serta merancang struktur DDL untuk 7 tabel relasional utama (profiles, reports, comments, quests, rewards, notifications, report_upvotes).</li>
-            <li><code>0002_mock_reports_and_notifications.sql</code>: Penulisan data seeding manual untuk wilayah administratif Kota Surabaya (Kec. Wonokromo, Sukolilo, Rungkut, Dukuh Pakis, Genteng) lengkap dengan data historis tanggapan dinas.</li>
-            <li><code>0003_auth_trigger.sql</code>: Penulisan fungsi PL/pgSQL <code>public.handle_new_user()</code> dengan keamanan <code>SECURITY DEFINER</code> dan pembuatan database trigger pada <code>auth.users</code>.</li>
-          </ul>
-        </li>
-        <li><strong>Keamanan Data (Row Level Security - RLS):</strong> Mengaktifkan RLS pada seluruh tabel publik dan merancang security policies guna melindungi hak akses pembacaan serta modifikasi data pengguna secara terisolasi.</li>
-      </ul>
+      <strong>Perancangan Skema Database Supabase & Data Seeding Nyata:</strong>
+      Kami merancang manual relasi tabel di Supabase (<code>reports</code>, <code>profiles</code>, <code>comments</code>, <code>quests</code>, <code>rewards</code>), menulis migrasi SQL, menyusun trigger pembuatan akun otomatis, serta menginput data awal laporan riil untuk area wilayah Kota Surabaya (Kecamatan Wonokromo, Sukolilo, Rungkut, Genteng, dsb.).
     </li>
     <li>
-      <strong>Perancangan Aset Visual &amp; Komponen Logo SVG (Manual):</strong>
-      <ul>
-        <li><strong>Desain Logo Vektor Murni (<code>src/components/ui/logo.tsx</code>):</strong> Kode SVG logo dirancang manual (~1.5KB) tanpa AI, memadukan simbol megafon aspirasi, papan checklist laporan, gelombang suara responsif, serta palet warna kustom (<code>#3b82f6</code> ke <code>#1d4ed8</code>) dengan adaptasi tata letak horizontal maupun vertikal.</li>
-        <li><strong>Kurasi &amp; Kompresi Foto Kerusakan Nyata:</strong> Pengambilan dan kurasi foto riil kerusakan fasilitas perkotaan di Surabaya (<code>public/images/reports/rusak1.jpg</code>, <code>rusak2.jpg</code>, <code>rusak3.jpg</code>) serta dokumentasi foto After perbaikan jalan.</li>
-      </ul>
+      <strong>Desain Identitas Logo SVG LaporKuy (<code>src/components/ui/logo.tsx</code>):</strong>
+      Logo resmi LaporKuy (perpaduan simbol megafon aspirasi warga, papan checklist laporan, dan gelombang suara) kami desain secara manual dalam bentuk kode vektor SVG murni (~1.5KB) tanpa dependensi gambar eksternal agar ringan dan tajam di semua ukuran layar.
     </li>
     <li>
-      <strong>Pengujian Ergonomi pada Perangkat Fisik (Manual Ergonomics &amp; Usability):</strong>
-      <ul>
-        <li>Pengujian langsung pada berbagai perangkat smartphone fisik (viewport 360px–414px) untuk memvalidasi fluiditas navigasi bottom dock, kenyamanan jangkauan jempol (<em>thumb zone</em>), dan pencegahan pergeseran tata letak (<em>layout shifting</em>) pada peramban bergerak.</li>
-      </ul>
+      <strong>Kurasi Foto Kerusakan Lapangan & Uji Coba Langsung di Smartphone:</strong>
+      Pengambilan dan pemilihan foto kerusakan jalan dan fasilitas nyata untuk contoh aduan, serta pengujian langsung membuka website di HP fisik (layar 360px–414px) untuk memastikan tombol mudah dijangkau ibu jari saat dipakai di jalan.
     </li>
   </ol>
 
-  <hr class="divider" style="margin-top: 24px;">
+  <!-- Signature Section -->
+  <div class="signature-container">
+    <table class="sig-table">
+      <tr>
+        <td style="width: 58%; padding-right: 12px;">
+          <div style="font-weight: 700; font-size: 8.8pt; color: #1e3a8a; margin-bottom: 5px; text-transform: uppercase;">
+            Anggota Tim Pengembang:
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div class="sig-box" style="flex: 1;">
+              <div style="font-weight: 600;">Anggota 1</div>
+              <div class="sig-space"></div>
+              <div style="font-weight: 700; border-top: 1px solid #cbd5e1; padding-top: 2px;">Arya Putra Pratama</div>
+            </div>
+            <div class="sig-box" style="flex: 1;">
+              <div style="font-weight: 600;">Anggota 2</div>
+              <div class="sig-space"></div>
+              <div style="font-weight: 700; border-top: 1px solid #cbd5e1; padding-top: 2px;">M. Cahyaningrat</div>
+            </div>
+            <div class="sig-box" style="flex: 1;">
+              <div style="font-weight: 600;">Anggota 3</div>
+              <div class="sig-space"></div>
+              <div style="font-weight: 700; border-top: 1px solid #cbd5e1; padding-top: 2px;">M. Raditya Utomo</div>
+            </div>
+          </div>
+        </td>
 
-  <div class="signature-container clearfix">
-    <div class="signature-box">
-      <div>Bogor, 13 September 2026</div>
-      <div style="margin-top: 4px;">Menyetujui,</div>
-      <div style="font-weight: 700; margin-bottom: 8px;">Ketua Tim</div>
-      <div class="signature-space">
-        <!-- Tanda Tangan Digital / Basah -->
-      </div>
-      <div style="font-weight: 700; text-decoration: underline;">(Bendzanu Kamagifi)</div>
-      <div style="margin-top: 2px;">NISN: 0093389827</div>
-    </div>
+        <td style="width: 42%; text-align: left; padding-left: 14px;">
+          <div style="font-size: 8.8pt;">Bogor, 13 September 2026</div>
+          <div style="font-weight: 600; font-size: 8.8pt; margin-top: 1px;">Yang menyatakan,</div>
+          <div style="font-weight: 700; font-size: 9pt; color: #1e3a8a;">Ketua Tim</div>
+          <div class="sig-space" style="height: 48px;"></div>
+          <div style="font-weight: 700; text-decoration: underline; font-size: 9.3pt;">(Bendzanu Kamagifi)</div>
+          <div style="font-size: 8.3pt; color: #475569;">NISN: 0093389827</div>
+        </td>
+      </tr>
+    </table>
   </div>
 
 </body>

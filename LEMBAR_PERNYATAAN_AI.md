@@ -1,107 +1,89 @@
 # LEMBAR PERNYATAAN PENGGUNAAN AI
-**Exasti 2.0: Web Application Competition**
-
-Judul Proyek : LaporKuy
-Nama Ketua Tim : Bendzanu Kamagifi
-Nama Anggota Tim :
-1. Arya Putra Pratama
-2. Muhammad Cahyaningrat
-3. Muhammad Raditya Utomo
-
-## A. PENGEMBANGAN
-**1. Apa AI Coding Assistant / Platform utama yang tim anda gunakan untuk membangun produk ini?**
-Antigravity / Gemini 3.1 Pro High
-
-Platform utama yang kami gunakan dalam perancangan dan pengembangan aplikasi LaporKuy adalah Antigravity yang ditenagai oleh model penalaran tingkat tinggi Google Gemini 3.1 Pro (High Reasoning/Thinking Mode). Antigravity difungsikan sebagai Autonomous Agentic Coding Assistant dan AI Pair Programmer komprehensif yang terintegrasi langsung dengan lingkungan pengembangan lokal (IDE dan Terminal).
-
-Keunggulan dan integrasi fungsional yang dimanfaatkan dalam proyek ini meliputi:
-1. Large Context Window & Multi-File Reasoning: Mampu memetakan dan menyelaraskan dependensi kode secara holistik lintas ratusan berkas, mencakup Next.js 16 (App Router), TypeScript, Tailwind CSS, Zustand state stores, serta skema Supabase PostgreSQL.
-2. Architectural Planning Mode: Menerapkan Spec-Driven Development melalui penyusunan Implementation Plan terstruktur sebelum eksekusi berkas, sehingga setiap modul dikembangkan secara terukur sesuai spesifikasi kebutuhan produk (PRD).
-3. Live Execution & Verification: Menjalankan eksekusi build, pemeriksaan unit, linting, serta debugging langsung pada terminal lokal untuk memastikan keandalan sistem tanpa kegagalan saat runtime sebelum proses deployment.
-
-## B. LOGIKA PROMPTING
-**1. Tuliskan Prompt Utama/Pondasi yang tim anda gunakan di awal proyek untuk mendefinisikan aplikasi yang akan tim anda buat kepada AI:**
-**(ROLE & PERSONA)**
-Bertindaklah sebagai Lead Civic-Tech Architect dan Principal Fullstack Engineer. Anda ditugaskan untuk merancang dan membangun platform digital partisipasi warga perkotaan bernama "LaporKuy" (v2.0) berbasis pendekatan beyond-the-code yang mendukung target SDGs 11 (Sustainable Cities and Communities) dan SDGs 9 (Industry, Innovation, and Infrastructure).
-Visi Utama: "Lapor masalah kota dalam 30 detik, pantau progres penanganan secara transparan dan real-time."
-
-**SYSTEM REQUIREMENTS & SPECIFICATIONS:**
-**1. Core User Flow:**
-- Frictionless Reporting: Alur pelaporan cepat (Foto Kerusakan -> Deteksi Koordinat GPS Otomatis -> AI Classification & Scoring -> Submit Laporan).
-- Interactive Spatial Dashboard: Peta interaktif kota (Surabaya dan aglomerasi) dengan penyaringan kategori masalah (Jalan Rusak, Lampu Mati, Sampah, Banjir, Trotoar Difabel), visualisasi zona rawan, dan kartu ringkasan instan.
-- Transparency & SLA Monitoring: Pelacakan status tiket laporan publik (Pending, Terverifikasi, Diproses, Selesai), perhitungan sisa target hari SLA dinas (Dinas Bina Marga, Perhubungan, DLH), serta riwayat perbaikan Before-After.
-- Gamified Community Engagement: Sistem poin loyalitas civic, status tingkatan reputasi (Pemula sampai dengan Pahlawan Kota), indikator progres XP, tantangan misi harian/mingguan (Quests), penukaran poin (Rewards catalog), sistem verifikasi dukungan warga (Upvoting), dan lencana apresiasi (badges).
-
-**2. Technical Architecture & Constraints:**
-- Framework: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS.
-- Bundler Engine: Konfigurasikan webpack mode (--webpack) untuk menjamin stabilitas eksekusi native build pada lingkungan Windows.
-- Design Tokens & Civic Authority System:
-  - Palet warna ketat: Deep Navy Background (#020617), Civic Blue (#0057B8), Action Signal Orange (#F97316) khusus tombol aksi pelaporan, dan semantic status badges.
-  - Ergonomi Mobile: Standarisasi target sentuh minimum 48px-56px, floating bottom dock, tata letak squircle side-by-side tiles, dan hindari pengguliran horizontal pada seksi informatif di perangkat mobile.
-- State Management & Architecture:
-  - Pisahkan Auth State ke dalam Zustand Singleton Store (auth-store.ts) dengan lifecycle initialize() yang idempoten guna mencegah infinite redirect loop.
-  - Domain Store (store.ts) untuk mengelola sinkronisasi data laporan, komentar, misi, profil, dan notifikasi dengan fallback mock data yang resilien.
-- Mapping Engine: React-Leaflet terintegrasi MapTiler API (mendukung tema dark dataviz, streets, dan satellite) dengan kalkulasi penempatan penanda deterministik (zero purity violation).
-- Cloud Backend (Supabase):
-  - Gunakan Supabase PostgreSQL 15+ dengan ekstensi uuid-ossp.
-  - Susun skema migrasi terpisah untuk 7 tabel entitas: profiles, reports, comments, quests, rewards, notifications, dan report_upvotes.
-  - Terapkan Row Level Security (RLS) serta Database Trigger pada auth.users untuk sinkronisasi profil instan pasca-registrasi.
-
-**OUTPUT CONTRACT:**
-Hasilkan arsitektur kode modular, teruji (clean build), bebas dependensi usang, dan siap diuji pakai secara responsif baik pada smartphone maupun desktop.
-
-**2. Kendala terbesar apa (bug/error/halusinasi AI) yang tim anda temui selama proses pembuatan, dan bagaimana cara Anda memberikan instruksi ulang (re-prompting) kepada AI untuk menyelesaikannya?**
-Selama proses pengembangan dengan model AI, kami menemukan 4 kendala kritis yang membutuhkan investigasi mendalam dan instruksi perbaikan (re-prompting) terarah:
-
-**a. Kendala 'AI Slop' pada Desain Antarmuka (UI Terlalu Kaku dan Monoton):**
-- **Permasalahan (AI Slop):** Kode antarmuka awal yang dihasilkan oleh AI terperangkap dalam pola generik 'AI slop' dengan karakteristik desain yang terlalu kaku, datar, dan monoton. Tampilannya menyerupai template dashboard administratif konvensional: tata letak kotak-kotak kaku (boxy layout) tanpa variasi kedalaman visual, palet warna dingin yang menjemukan, ketiadaan micro-interactions atau animasi transisi status laporan, serta tipografi yang kaku tanpa hierarki emosional. Hal ini membuat aplikasi terasa birokratis, dingin, dan tidak ramah bagi warga yang membutuhkan pelaporan cepat.
-- **Cara Perbaikan & Re-Prompting yang Benar:**
-Kami menginstruksikan AI melalui re-prompting terarah untuk merombak total antarmuka menjadi 'Dynamic & Engaging Civic Experience':
-  a. Menghilangkan struktur kotak yang kaku dengan menerapkan sistem kartu modern (squircle tiles bergradasi halus), penataan kedalaman visual (subtle elevation), serta palet warna berkarakter tegas: Deep Navy Background (#020617), Primary Civic Blue (#0057B8), dan Action Signal Orange (#F97316) khusus tombol CTA pelaporan agar langsung menarik atensi pengguna.
-  b. Mengikis kesan monoton melalui integrasi gamifikasi visual dan indikator interaktif: menyisipkan progress bar XP warga, tampilan lencana reputasi (badges), kartu ringkasan instan, serta stepper linier pelacakan status penanganan (Pending -> Terverifikasi -> Diproses -> Selesai) lengkap dengan penghitung mundur target SLA dinas.
-  c. Mengoptimalkan ergonomi sentuh di layar ponsel: mengganti tata letak statis dengan floating bottom navigation dock, tombol aksi Hero setinggi 56px (h-14) yang ramah jangkauan jempol (thumb zone), serta feedback sentuhan interaktif yang responsif untuk menghidupkan pengalaman pengguna.
-
-**b. Mobile Session Verification Loop (Race Condition pada Auth Guard):**
-- **Permasalahan:** AuthGuard membaca status otentikasi dari per-component React store hook. Pada perangkat mobile dengan latensi jaringan seluler yang fluktuatif, pemanggilan supabase.auth.getSession() belum selesai saat komponen me-render rute terlindungi. Hal ini membuat flag isInitialized tertunda dan memicu pengalihan prematur berulang-ulang ke /login, menciptakan putaran pengalihan tanpa henti (infinite redirection loop).
-- **Re-Prompting:**
-"Refactor autentikasi menjadi Zustand Singleton Store (src/lib/auth-store.ts) dengan inisialisasi yang strictly idempotent menggunakan flag _booted. Pastikan supabase.auth.getSession() hanya dipanggil tepat satu kali saat aplikasi booting melalui AuthProvider tunggal, dan AuthGuard hanya mengevaluasi pengalihan rute setelah isInitialized bernilai true."
-
-**c. React Purity Violation & Marker Glitching pada Komponen Peta (map-view.tsx):**
-- **Permasalahan:** AI menyisipkan fungsi tidak murni Math.random() di dalam blok perulangan render komponen Leaflet untuk memberikan sebaran acak penanda laporan. Hal ini melanggar kaidah kemurnian fungsi render React, memicu peringatan ESLint, dan menyebabkan titik penanda bergetar serta berpindah posisi (glitching jitter) setiap kali peta digeser atau diatur perbesarannya.
-- **Re-Prompting:**
-"Hilangkan Math.random() dari fungsi render MapView. Ganti dengan algoritma pseudo-random hashing deterministik berbasis indeks laporan: const pseudoRandomX = (idx * 0.13) % 0.05 agar koordinat penanda tetap konsisten dan stabil pada setiap siklus render."
-
-**d. Toolchain Native Binding Crash pada Lingkungan Windows (Turbopack SWC Error):**
-- **Permasalahan:** Next.js 16 secara bawaan mengaktifkan Turbopack. Pada sistem operasi Windows x64, pustaka native bindings (@next/swc-win32-x64-msvc) mengalami kegagalan (not a valid Win32 application), menyebabkan server pengembangan lokal dan proses kompilasi langsung berhenti secara mendadak.
-- **Re-Prompting:**
-"Perbarui konfigurasi skrip pada package.json dengan menambahkan flag --webpack ('next dev --webpack' dan 'next build --webpack') untuk beralih ke bundler Webpack yang stabil di Windows."
-
-**3. Apakah ada komponen kode, desain visual, atau database yang tim anda buat/modifikasi secara manual tanpa bantuan AI? Jika ada, sebutkan bagian mana:**
-Ya, terdapat sejumlah komponen arsitektural krusial, konfigurasi database, dan aset visual yang kami rancang dan bangun secara manual tanpa bantuan AI guna menjamin keandalan sistem:
-
-**1. Konfigurasi Menyeluruh Ekosistem Backend Supabase (Manual):**
-- **Provisioning & Environment Setup:** Mengonfigurasi proyek Supabase cloud secara manual pada dashboard resmi (Project Ref: qgaabxifnyrckkpzqcjk.supabase.co), mengatur kredensial API Keys (NEXT_PUBLIC_SUPABASE_ANON_KEY), konfigurasi URL pengalihan, serta menyelaraskan integrasi SSR client/server (@supabase/ssr).
-- **Skema Database & Migrasi SQL Manual (supabase/migrations/):**
-  1. **0001_initial_schema.sql:** Mengaktifkan ekstensi uuid-ossp serta merancang struktur DDL untuk 7 tabel relasional utama: a) profiles: Entitas profil warga, pelacak skor reputasi dan kepercayaan (trust_score), poin gamifikasi, streak harian, dan kolom JSONB untuk koleksi lencana apresiasi. b) reports: Entitas data pelaporan infrastruktur dengan koordinat DOUBLE PRECISION (lat/lng), relasi foreign key ke profiles (ON DELETE CASCADE), status penanganan, target SLA dinas, serta penugasan dinas (assigned_dinas). c) comments: Relasi diskusi publik dan tanggapan resmi dari dinas terkait (is_official). d) quests & rewards: Skema misi partisipasi warga dan katalog penukaran imbalan apresiasi. e) notifications & report_upvotes: Sistem riwayat pemberitahuan serta tabel relasi upvote dengan composite primary key (report_id, user_id) guna mencegah manipulasi voting ganda.
-  2. **0002_mock_reports_and_notifications.sql:** Penulisan data seeding manual untuk wilayah administratif Kota Surabaya (Kec. Wonokromo, Sukolilo, Rungkut, Dukuh Pakis, Genteng) lengkap dengan data historis komentar penanganan dinas teknis.
-  3. **0003_auth_trigger.sql:** Penulisan fungsi PL/pgSQL public.handle_new_user() dengan hak keamanan SECURITY DEFINER dan pembuatan trigger on_auth_user_created pada auth.users untuk sinkronisasi otomatis pembuatan record profil baru setiap kali pengguna mendaftar.
-- **Keamanan Data (Row Level Security - RLS):** Mengaktifkan RLS pada seluruh tabel publik dan mengonfigurasi security policies guna melindungi akses pembacaan dan pembaruan data secara terisolasi.
-
-**2. Perancangan Aset Visual & Komponen Logo SVG (Manual):**
-- **Desain Logo Vektor Murni (src/components/ui/logo.tsx):** Kode SVG logo dirancang manual (~1.5KB) tanpa AI, memadukan simbol megafon aspirasi, papan checklist laporan, gelombang suara responsif, serta palet warna kustom (#3b82f6 ke #1d4ed8) dengan adaptasi tata letak horizontal maupun vertikal.
-- **Kurasi & Kompresi Foto Kerusakan Nyata:** Pengambilan dan kurasi foto riil kerusakan fasilitas perkotaan di Surabaya (public/images/reports/rusak1.jpg, rusak2.jpg, rusak3.jpg) serta dokumentasi foto After perbaikan jalan.
-
-**3. Pengujian Ergonomi pada Perangkat Fisik (Manual Ergonomics & Usability):**
-Pengujian manual pada perangkat smartphone fisik (viewport 360px-414px) untuk memvalidasi fluiditas navigasi bottom dock, kenyamanan jangkauan jempol (thumb zone), dan pencegahan pergeseran tata letak (layout shifting) pada peramban bergerak.
+### Exasti 2.0: Web Application Competition
 
 ---
+
+| Data Proyek | Keterangan |
+| :--- | :--- |
+| **Judul Proyek** | **LaporKuy** (Platform Pelaporan Masalah Fasilitas Kota Berbasis Civic-Tech) |
+| **Nama Ketua Tim** | **Bendzanu Kamagifi** (NISN: 0093389827) |
+| **Nama Anggota Tim** | 1. Arya Putra Pratama<br>2. Muhammad Cahyaningrat<br>3. Muhammad Raditya Utomo |
+
+---
+
+### A. PENGEMBANGAN
+
+#### 1. Apa AI Coding Assistant / Platform utama yang tim anda gunakan untuk membangun produk ini?
+**Antigravity (Google Gemini)**
+
+Platform utama yang kami gunakan adalah **Antigravity** dengan model dasar **Google Gemini**. Kami memanfaatkan AI ini secara praktis sebagai *pair programming partner* yang terhubung langsung di lingkungan editor kode (IDE) dan terminal lokal.
+
+Peran nyata pemanfaatan AI dalam proyek ini:
+1. **Akselerasi Pembuatan Kerangka Kode (Scaffolding):** Membantu membuatkan komponen dasar Next.js 16 (App Router), penulisan antarmuka TypeScript (*interface/types*), dan utilitas Tailwind CSS agar proses pengembangan lebih cepat.
+2. **Bantuan Debugging Terminal:** Membantu menganalisis pesan error pada terminal lokal saat terjadi kendala kompilasi Webpack, dependensi npm, atau sintaks TypeScript.
+3. **Eksplorasi Ide Solusi Logika:** Membantu merumuskan logika penanganan status laporan dan struktur penulisan query integrasi Supabase.
+
+---
+
+### B. LOGIKA PROMPTING
+
+#### 1. Tuliskan Prompt Utama/Pondasi yang tim anda gunakan di awal proyek untuk mendefinisikan aplikasi yang akan tim anda buat kepada AI:
+
+```text
+"Halo! Kami sedang membuat aplikasi web bernama 'LaporKuy' untuk perlombaan Exasti 2.0.
+Aplikasi ini adalah platform civic-tech tempat warga bisa melaporkan masalah fasilitas publik di kota (seperti jalan berlubang, lampu jalan mati, tumpukan sampah, dan saluran banjir).
+
+Kebutuhan aplikasi yang ingin kami bangun:
+1. Alur Lapor Warga: Form lapor dengan unggah foto kerusakan, input judul, kategori masalah, alamat/koordinat peta, serta deskripsi singkat.
+2. Peta Sebaran Interaktif: Peta kota (studi kasus Surabaya) yang menampilkan titik-titik laporan menggunakan penanda (marker) yang bisa difilter berdasarkan kategori.
+3. Dashboard Status & Tracking: Warga bisa melihat progres laporan (Menunggu Verifikasi, Sedang Ditangani, Selesai Beres) lengkap dengan catatan dari dinas terkait.
+4. Fitur Gamifikasi Civic: Poin keaktifan warga, sistem level/peringkat, dan misi harian agar warga termotivasi ikut menjaga kotanya.
+5. Dashboard Admin Khusus: Panel bagi petugas dinas/admin kota untuk memverifikasi laporan masuk dan mengunggah foto bukti setelah perbaikan.
+
+Tech stack yang kami gunakan:
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Tailwind CSS untuk antarmuka yang modern, responsif, dan ramah pengguna HP
+- Supabase (PostgreSQL) sebagai basis data penyimpanan laporan warga
+- Leaflet / OpenStreetMap untuk tampilan peta interaktif
+
+Tolong bantu buatkan struktur folder awal yang rapi dan rancangan komponen utamanya."
+```
+
+#### 2. Kendala terbesar apa (bug/error/halusinasi AI) yang tim anda temui selama proses pembuatan, dan bagaimana cara Anda memberikan instruksi ulang (re-prompting) kepada AI untuk menyelesaikannya?
+
+Selama proses coding bersama AI, kami menemukan 3 kendala teknis utama yang harus kami perbaiki melalui re-prompting terarah:
+
+##### a. Error Leaflet Map saat Server-Side Rendering (Window is not defined)
+- **Kendala:** Kode awal yang diberikan AI langsung mengimpor pustaka Leaflet pada komponen halaman Next.js. Hal ini menyebabkan error `ReferenceError: window is not defined` karena Leaflet mencoba mengakses objek browser saat Next.js masih me-render di sisi server.
+- **Solusi Re-prompting:** *"Komponen Leaflet crash saat build karena dieksekusi di server. Tolong refactor MapView menggunakan next/dynamic dengan opsi ssr: false, dan pastikan Leaflet hanya di-load saat komponen sudah mount di sisi browser client."*
+
+##### b. Desain Tampilan Awal Terlalu Kaku & Monoton (Generic Dashboard)
+- **Kendala:** Tampilan awal yang dihasilkan AI terlihat sangat kaku seperti template admin perkantoran lama: tombol-tombol kecil tidak nyaman untuk layar HP, warna abu-abu datar, dan tidak memiliki identitas khas aplikasi civic modern.
+- **Solusi Re-prompting:** *"Rombak UI LaporKuy agar lebih hidup dan modern untuk warga. Gunakan palet civic blue (#0057B8) dipadu aksen oranye pada tombol aksi lapor, buat kartu laporan dengan rounded corner yang lembut, tambahkan navigasi bottom bar untuk mobile, dan buat alur pelaporannya simpel dalam 3 langkah."*
+
+##### c. Sinkronisasi Status Verifikasi Laporan antara Admin dan Frontend Warga
+- **Kendala:** Ketika admin memverifikasi laporan di dashboard admin, perubahan status laporan tidak langsung terlihat di halaman warga tanpa harus me-refresh halaman secara manual.
+- **Solusi Re-prompting:** *"Buatkan mekanisme sinkronisasi state dua arah. Ketika admin mengupdate status atau menambahkan catatan tindak lanjut dinas, perbarui tabel Supabase sekaligus dispatch custom event di browser agar tampilan laporan warga langsung ter-update secara otomatis."*
+
+#### 3. Apakah ada komponen kode, desain visual, atau database yang tim anda buat/modifikasi secara manual tanpa bantuan AI? Jika ada, sebutkan bagian mana:
+
+1. **Perancangan Skema Database Supabase & Data Seeding Nyata:** Kami merancang manual relasi tabel di Supabase (`reports`, `profiles`, `comments`, `quests`, `rewards`), menulis migrasi SQL, menyusun trigger pembuatan akun otomatis, serta menginput data awal laporan riil untuk area wilayah Kota Surabaya (Kecamatan Wonokromo, Sukolilo, Rungkut, Genteng, dsb.).
+2. **Desain Identitas Logo SVG LaporKuy (`src/components/ui/logo.tsx`):** Logo resmi LaporKuy (perpaduan simbol megafon aspirasi warga, papan checklist laporan, dan gelombang suara) kami desain secara manual dalam bentuk kode vektor SVG murni (~1.5KB) tanpa dependensi gambar eksternal agar ringan dan tajam di semua ukuran layar.
+3. **Kurasi Foto Kerusakan Lapangan & Uji Coba Langsung di Smartphone:** Pengambilan dan pemilihan foto kerusakan jalan dan fasilitas nyata untuk contoh aduan, serta pengujian langsung membuka website di HP fisik (layar 360px–414px) untuk memastikan tombol mudah dijangkau ibu jari saat dipakai di jalan.
+
+---
+
 Bogor, 13 September 2026
 
-Menyetujui,  
-Ketua Tim
+**Yang menyatakan,**  
+**Ketua Tim**
 
+*(Tanda Tangan)*
 
-
-
-(Bendzanu Kamagifi)  
+**<u>(Bendzanu Kamagifi)</u>**  
 NISN: 0093389827
+
+**Anggota Tim:**
+- Arya Putra Pratama
+- Muhammad Cahyaningrat
+- Muhammad Raditya Utomo
